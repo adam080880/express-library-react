@@ -41,7 +41,7 @@ class Catalog extends React.Component {
   }
 
   bookRender = (book, index) => (
-    <div className="col-6 col-xs-12 col-md-4 col-lg-3 px-3 mb-5" key={index}>
+    <div className="col-6 col-xs-12 col-md-4 col-lg-3 px-2 mb-4" key={index}>
       <div className="card h-100 card-hoverable">
         <Link to={`detail/${book.id}`}>
           <div className="card-img-top bg-secondary w-100" style={{height: "180px", backgroundImage: `url(${book.image})`, backgroundSize: "cover"}}>
@@ -51,12 +51,14 @@ class Catalog extends React.Component {
           <h5 className="card-title font-weight-bold">
             {book.title}
           </h5>
-          <h6 className="card-subtitle mb-2 text-muted">
-            {book.genre} - 
-            <div className={`badge ml-2 badge-${ book.status === 'available' ? 'success' : 'danger' }`}>
+          <div className="d-flex mt-0 mb-2 flex-row align-items-center justify-content-between">
+            <h6 className="card-subtitle mb-0 text-muted">
+              {book.genre}
+            </h6>                      
+            <div className={`badge badge-${ book.status === 'available' ? 'success' : 'danger' }`}>
               {book.status}
             </div>
-          </h6>                      
+          </div>
           <Link to={`detail/${book.id}`} className="card-link">
             More
           </Link>
@@ -71,9 +73,8 @@ class Catalog extends React.Component {
     })
 
     const results = await Axios.get(appUrl(`books?limit=4&page=${this.state.page + 1}`))
-    const { data: books } = results.data
 
-    const tempBooks = [...this.state.data, ...books]
+    const tempBooks = [...this.state.data, ...results.data.data]
 
     this.setState({
       data: tempBooks,
