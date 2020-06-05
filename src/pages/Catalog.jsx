@@ -2,8 +2,10 @@ import React from 'react'
 
 import Profile from '../assets/img/profile.png'
 import Logo from '../assets/img/book (1).svg'
+import Axios from 'axios'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { appUrl } from '../configs/app'
 
 import {
   Link,
@@ -14,21 +16,47 @@ class Catalog extends React.Component {
     super(props)
 
     this.state = {
-      isLoading: 'loading'
+      isLoading: 'loading',
+      data: []
     }
   }
 
-  componentDidMount() {
-    // const stateHistory = this.props.location.state
+  async componentDidMount() {
+    const results = await Axios.get(appUrl('books?limit=4'))
+    const { data } = results.data
+    this.setState({ data })
   }
 
   logout = (e) => {
     e.preventDefault()
 
-    this.props.history.push('/login', {
-      isLogin: false
-    })
+    this.props.history.push('/login')
   }
+
+  bookRender = (book, index) => (
+    <div className="col-6 col-xs-12 col-md-4 col-lg-3 pr-2 mb-2" key={index}>
+      <div className="card h-100 card-hoverable">
+        <Link to={`detail/${book.id}`}>
+          <div className="card-img-top bg-secondary w-100" style={{height: "180px", backgroundImage: `url(${book.image})`, backgroundSize: "cover"}}>
+          </div>
+        </Link>
+        <div className="card-body">
+          <h5 className="card-title font-weight-bold">
+            {book.title}
+          </h5>
+          <h6 className="card-subtitle mb-2 text-muted">
+            {book.genre} - 
+            <div className={`badge ml-2 badge-${ book.status === 'available' ? 'success' : 'danger' }`}>
+              {book.status}
+            </div>
+          </h6>                      
+          <Link to={`detail/${book.id}`} className="card-link">
+            More
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
 
   render() {
     return (
@@ -59,7 +87,7 @@ class Catalog extends React.Component {
               </div>
             </div>
           </div>
-          <div className="col bg-light">
+          <div className="col mb-3 bg-light">
             <div className="mb-3 navbar navbar-expand-md d-flex justify-content-between bg-white border-bottom" style={{height: "80px"}}>
               <ul className="navbar-nav">
                 <li className="nav-item dropdown">
@@ -99,82 +127,7 @@ class Catalog extends React.Component {
                   List Book
                 </h5>
                 <div className="row no-gutters">
-                  <div className="col-6 col-xs-12 col-md-4 col-lg-3 pr-2 mb-2">
-                    <div className="card h-100 card-hoverable">
-                      <Link to="/detail/1">
-                        <div className="card-img-top bg-secondary w-100" style={{height: "180px", backgroundImage: `url('${require("../assets/img/covernya (1).png")}')`, backgroundSize: "cover"}}>
-                        </div>
-                      </Link>
-                      <div className="card-body">
-                          <h5 className="card-title font-weight-bold">
-                            Dilan 1990
-                          </h5>
-                        <h6 className="card-subtitle mb-2 text-muted">
-                          Romance
-                        </h6>                      
-                        <Link to="/detail/1" className="card-link">
-                          More
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-6 col-xs-12 col-md-4 col-lg-3 pr-2 mb-2">
-                    <div className="card h-100 card-hoverable">
-                      <Link to="/detail/1">
-                        <div className="card-img-top bg-secondary w-100" style={{height: "180px", backgroundImage: `url('${require("../assets/img/koalakumal.jpg")}')`, backgroundSize: "cover"}}>
-                        </div>
-                      </Link>
-                      <div className="card-body">
-                          <h5 className="card-title font-weight-bold">
-                            Koala Kumal
-                          </h5>
-                        <h6 className="card-subtitle mb-2 text-muted">
-                          Comedy
-                        </h6>                      
-                        <Link to="/detail/1" className="card-link">
-                          More
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-6 col-xs-12 col-md-4 col-lg-3 pr-2 mb-2">
-                    <div className="card h-100 card-hoverable">
-                      <Link to="/detail/1">
-                        <div className="card-img-top bg-secondary w-100" style={{height: "180px", backgroundImage: `url('${require("../assets/img/tere_liye.jpg")}')`, backgroundSize: "cover"}}>
-                        </div>
-                      </Link>
-                      <div className="card-body">
-                          <h5 className="card-title font-weight-bold">
-                            Hujan
-                          </h5>
-                        <h6 className="card-subtitle mb-2 text-muted">
-                          Filosofi
-                        </h6>                      
-                        <Link to="/detail/1" className="card-link">
-                          More
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-6 col-xs-12 col-md-4 col-lg-3 pr-2 mb-2">
-                    <div className="card h-100 card-hoverable">
-                      <Link to="/detail/1">
-                        <div className="card-img-top bg-secondary w-100" style={{height: "180px", backgroundImage: `url('${require("../assets/img/tewasnya_gagak_hitam.jpg")}')`, backgroundSize: "cover"}}>
-                        </div>
-                      </Link>
-                      <div className="card-body">
-                          <h5 className="card-title font-weight-bold">
-                            Tewasnya Gagak Hitam
-                          </h5>
-                        <h6 className="card-subtitle mb-2 text-muted">
-                          Mistery
-                        </h6>                      
-                        <Link to="/detail/1" className="card-link">
-                          More
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
+                  {this.state.data.map(this.bookRender)}
                 </div>
               </div>
             </div>
