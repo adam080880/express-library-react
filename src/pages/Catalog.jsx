@@ -17,12 +17,13 @@ class Catalog extends React.Component {
 
     this.state = {
       isLoading: true,
-      data: []
+      data: [], 
+      page: 1
     }
   }
 
   async componentDidMount() {
-    const results = await Axios.get(appUrl('books?limit=4'))
+    const results = await Axios.get(appUrl(`books?limit=4&page=${this.state.page}`))
     const { data } = results.data
     this.setState({ data, isLoading: false })
   }
@@ -40,7 +41,7 @@ class Catalog extends React.Component {
   }
 
   bookRender = (book, index) => (
-    <div className="col-6 col-xs-12 col-md-4 col-lg-3 pr-2 mb-2" key={index}>
+    <div className="col-6 col-xs-12 col-md-4 col-lg-3 px-3 mb-5" key={index}>
       <div className="card h-100 card-hoverable">
         <Link to={`detail/${book.id}`}>
           <div className="card-img-top bg-secondary w-100" style={{height: "180px", backgroundImage: `url(${book.image})`, backgroundSize: "cover"}}>
@@ -63,6 +64,23 @@ class Catalog extends React.Component {
       </div>
     </div>
   )
+
+  nextPage = async (e) => {
+    this.setState({
+      isLoading: true
+    })
+
+    const results = await Axios.get(appUrl(`books?limit=4&page=${this.state.page + 1}`))
+    const { data: books } = results.data
+
+    const tempBooks = [...this.state.data, ...books]
+
+    this.setState({
+      data: tempBooks,
+      isLoading: false,
+      page: this.state.page + 1
+    })
+  }
 
   render() {
     return (
@@ -134,6 +152,9 @@ class Catalog extends React.Component {
                 </h5>
                 <div className="row no-gutters">
                   <this.condition state={this.state} dataRender={this.state.data.map(this.bookRender)}></this.condition>
+                </div>
+                <div className="text-center mt-3" id="wrapperButton">
+                  <div className="btn btn-outline-primary px-4 rounded" onClick={this.nextPage}>More</div>
                 </div>
               </div>
             </div>
