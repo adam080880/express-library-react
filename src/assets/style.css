@@ -1,479 +1,50 @@
-* {
-  box-sizing: border-box;
-}
-
-html, body, #root, .detail, .auth_page, .catalog {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-}
-
-.catalog {
-  flex-direction: row;
-  display: flex;
-  overflow-y: hidden;
-}
-
-.auth_page {
-  display: flex;
-  flex-direction: row;
+#root, body, html {
   width: 100%;
   height: 100%;
 }
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  display: flex;
-  flex-direction: row;
-  flex: 1;
+html {
+  padding-top: 0;
 }
 
-.sidebar {
-  width: 250px;
-  background-color: #fff;
-  /* box-shadow: 1px 0px 6px lightgray; */
-  height: 100%;
-  border: 1px solid lightgray;
+.login-cover {
+  background-image: url(./img/mollie-sivaram-_1gBVgy8gIU-unsplash.png);
+  background-size: contain;
 }
 
-.sidebar .profile {
-  margin-top: 50px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.login-overlay {
+  padding: 20px;
+  background-color: rgba(0,0,0,0.5);
 }
 
-.sidebar .profile .profile-img img {
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
+.card {
+  border: none !important;
+  box-shadow: 0px 0px 3px lightgray !important;
+  transition: 0.5s !important;
 }
 
-.sidebar .profile .profile-name {
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-.sidebar .menu {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  margin-top: 50px;
-}
-
-.sidebar .menu .item {
-  height: 40px;
-  display: flex;
-  align-items: center;
-  padding: 0 30px;
-  font-size: 18px;
-}
-
-.content {
-  flex: 1;
-}
-
-.content .navbar {
-  background-color: #fff;
-  border: 1px solid lightgray;
-  border-left: 0;
-  border-bottom: 0;
-  box-shadow: 5px 2px 10px lightgray;
-  /* box-shadow: 5px 1px 6px lightgray; */
-  display: flex;
-  align-items: center;
-  height: 80px;
-  width: 100%;
-  position: sticky;
-}
-
-.content .navbar .navbar-item {
-  list-style-type: none;
-  margin:0;
-  padding:0;
-  padding-left: 40px;
-}
-
-.content .navbar .navbar-item li {
-  display: inline-block;
-  padding-left: 10px;
-  padding-right: 10px;
-  font-weight: bold;
-}
-
-.content .navbar .search-wrapper {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-
-.content .navbar .brand {
-  padding-right: 40px;
-  display: flex;
-  align-items: center;
-}
-
-.content .navbar .brand .text {
-  font-weight: 800;
-  font-size: 25px;
-  margin-left: 12px;
-}
-
-.content .navbar .search-wrapper .input-search {
-  width: 60%;
-  height: 43px;
-  /* border-radius: 100px; */
-  border: none;
-  border-bottom: 1px solid lightgray;
-  /* padding: 0 20px; */
-  transition: 0.5s;
-}
-
-.content .navbar .search-wrapper .input-search:focus {
-  border-bottom: 1.5px solid lightskyblue;
-  outline: none;
-}
-
-.content .container {
-  padding: 30px;
-  height: 100%;
-  overflow-y: auto;
-}
-
-.content .container .list-book {
-  display: flex;  
-}
-
-.content .container .list-book .card {
-  box-shadow: 0 0 5px lightgray;
-  margin: 15px;
-  border-radius: 10px;
-}
-
-.content .container .list-book .card:hover {
-  transition: 0.5s;
-  box-shadow: 0 0 15px lightgray;
-  cursor: pointer;
-}
-
-.content .container .list-book .card .card-image {
-  background-color: lightgray;
-  height: 150px;
-  border-top-right-radius: 10px;
-  border-top-left-radius: 10px;
-}
-
-.content .container .list-book .card .card-text {
-  padding: 15px;
-}
-
-.content .container .list-book .card .card-text .title {
-  text-align: center;
-  font-weight: bold;
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-/* detail */
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  /* overflow-y: hidden; */
-}
-
-.detail {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  background-color: #fdfdfd;
-}
-
-.detail .content .card .status-title {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.detail .content .card .status-title .date {
-  font-size: 20px;
-}
-
-.detail .content .card .status-title .status {
-  color: #99D815;
-  font-weight: bold;
-  font-size: 30px;
-}
-
-.detail .content .card .category-badge {
-  width: 95px;
-  height: 30px;
-  background: #FBCC38;
-  border-radius: 15px;
-  color: white;
-  font-weight: bold;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-}
-
-.detail .content .card .status-title h1 {
-  font-size: 50px;
-  line-height: 65px;
-}
-
-.detail .content {
-  display: flex;
-  justify-content: center;
-  padding: 50px;
-}
-
-.detail .content .card {  
-  justify-self: center;
-  display: flex;
-  background-color: #fff;
-  width: 80%;
-  justify-content: space-between;
-  padding: 60px;
-  border-radius: 50px;
-  margin-top: -300px;
-  box-shadow: 0px 0px 5px lightgray;
-}
-
-.detail .content .card .description {
-  width: 70%;
-}
-
-.detail .content .card .cover-button .cover {
-  margin-top: -200px;
-  margin-bottom: 100px;
-}
-
-.detail .content .card .cover-button .cta-borrow {
-  display: block;
-  background: #FBCC38;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
-  width: 240px;
-  height: 74px;
-  font-size: 30px;
-  font-weight: bold;
-  border: none;
-  color: white;
-  cursor: pointer;
-}
-
-.detail .content .card .cover-button .cta-borrow:hover {
-  background: rgb(216, 177, 48);
-  transition: 0.2s;
+.card-hoverable:hover {
+  box-shadow: 0px 0px 10px rgb(218, 218, 218) !important;  
 }
 
 .icon-arrow {
-  background-color: #fff;
   width: 50px;
   height: 50px;
-  position: fixed;
-  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  left: 20px;
-  top: 20px;
+  top: 10px;
+  left: 10px;
+  background-color: #fff;
+  border-radius: 50%;
 }
 
 .icon-arrow:hover {
-  transform: 0.2s;
-  opacity: 0.8;
-  cursor: pointer;
+  box-shadow: 0px 0px 8px lightgray;
 }
 
-/* login and register */
-
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-
-body {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 100%;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-h1 {
-  font-weight: bold;
-  font-size: 64px;
-}
-
-.image h1 {
-  position: absolute;
-  color: white;
-  align-self: center;
-  margin-left: 50px;
-}
-
-.top-right {
-  position: fixed;
-  width: 100%;
-  /* right: 40px; */
-  top: 30px;
-  z-index: 1;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.top-right img {
-  width: 45px;
-  margin-right: 10px;
-}
-
-.image {
-  flex: 1;
-  position: relative;
-  display: flex;
-  width: 100%;
-  height: 100%;
-}
-
-.image .layer {
-  background-color: #000000;
-  opacity: 0.3;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-}
-
-.image img {
-  display: block;
-  width: 100%;
-  max-height:100%;
-}
-
-.form {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  margin: 0 40px;
-}
-
-.form form {
-  width: 100%;
-  max-width: 400px;
-}
-
-.form h1 {
-  margin-bottom: 10px;
-}
-
-.form .description {
-  margin-bottom: 40px;
-}
-
-.form .form-group {
-  position: relative;
-}
-
-.form .form-group label {
-  font-weight: bold;
-  font-size: 10px;
-  margin-top: 5px;
-  margin-left: 7px;
-  position: absolute;
-  color: lightgray;
-}
-
-.form .form-group input {
-  padding: 15px;
-  padding-bottom: 10px;
-  padding-top: 10px;
-  padding-left: 7px;
-  border: none;
-  border-bottom: 1px solid lightgray;
-  display: block;
-  width: 100%;
-  color: gray;
-}
-
-.form .form-group input:focus {
- outline: 0;
-}
-
-.form-group-row {
-  margin-top: 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.forgot {
-  font-weight: bold;
-  color: #424242;
-  font-size: 17px;
-}
-
-.but-not-space-between {
-  justify-content: left;
-}
-
-.cta-login {
-  border-radius: 5px;
-  background-color: #000000;
-  padding: 10px 25px;
-  color: white;
-  font-weight: bold;
-  border: none;
-}
-
-.secondary-register {
-  border-radius: 5px;
-  background-color: #a1a1a1;
-  padding: 10px 25px;
-  color: white;
-  font-weight: bold;
-  border: none;
-  margin-left: 10px;
-}
-
-.bt:hover {
-  opacity: 0.8;
-  transition: 0.2s;
-  cursor: pointer;
-}
-
-.forgot:hover {
-  opacity: 0.5;
-  cursor: pointer;
-}
-
-.input-section {
-  box-shadow: 0 0 5px lightgray;
-  border-radius: 5px;
-  padding: 5px;
-  padding-bottom: 0;
-}
-
-.terms {
-  position: fixed;
-  bottom: 30px;
-  color: gray;
-}
-
-.terms span {
-  color: black;
-  font-weight: bold;
+.focus-no-outline:focus {
+  outline: none !important;
+  box-shadow: none;
+  border: 1px solid lightgray;
 }

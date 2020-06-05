@@ -4,6 +4,7 @@ import Detail from './pages/Detail'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Catalog from './pages/Catalog'
+import ListData from './pages/ListData'
 
 import {
   BrowserRouter,
@@ -21,6 +22,7 @@ class App extends React.Component {
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/catalog" component={Catalog} />
+            <Route exact path="/list-data" component={ListData} />
           </Switch>
         </BrowserRouter>
       </>
