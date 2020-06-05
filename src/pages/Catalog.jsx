@@ -16,7 +16,7 @@ class Catalog extends React.Component {
     super(props)
 
     this.state = {
-      isLoading: 'loading',
+      isLoading: true,
       data: []
     }
   }
@@ -24,13 +24,19 @@ class Catalog extends React.Component {
   async componentDidMount() {
     const results = await Axios.get(appUrl('books?limit=4'))
     const { data } = results.data
-    this.setState({ data })
+    this.setState({ data, isLoading: false })
   }
 
   logout = (e) => {
     e.preventDefault()
 
     this.props.history.push('/login')
+  }
+
+  condition = (props) => {
+    if (props.state.isLoading) return <h1>Loading..</h1>
+    else if (props.state.data.length > 0) return props.dataRender
+    else if (props.state.data.length === 0 && !props.state.isLoading) return <h1>Data is not available</h1>
   }
 
   bookRender = (book, index) => (
@@ -127,7 +133,7 @@ class Catalog extends React.Component {
                   List Book
                 </h5>
                 <div className="row no-gutters">
-                  {this.state.data.map(this.bookRender)}
+                  <this.condition state={this.state} dataRender={this.state.data.map(this.bookRender)}></this.condition>
                 </div>
               </div>
             </div>
