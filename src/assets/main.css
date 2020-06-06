@@ -1,6 +1,5 @@
 body, html, #root, .container-fluid, .dashboard.row {
-  width: 100%;
-  height: 100%;
+  min-height: 100vh;
   background-color: #f7f7ff;
   font-family: Rubik;
 }
@@ -29,8 +28,7 @@ body, html, #root, .container-fluid, .dashboard.row {
 }
 
 .sidebar {
-  width: 14%;
-  height: 100%;
+  min-width: 14%;
   background-color: #10002b;
 }
 

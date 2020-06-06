@@ -8,6 +8,8 @@ import {
   Link
 } from 'react-router-dom'
 
+import Catalog from './Catalog'
+
 class Dashboard extends React.Component {
   logout = (e) => {
     localStorage.removeItem('token')
@@ -40,7 +42,7 @@ class Dashboard extends React.Component {
               </ul>
             </div>
 
-            
+            <Catalog />
           </Col>
         </Row>
       </div>
