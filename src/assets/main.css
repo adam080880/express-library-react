@@ -1,0 +1,53 @@
+body, html, #root, .container-fluid, .dashboard.row {
+  width: 100%;
+  height: 100%;
+  background-color: #f7f7ff;
+  font-family: Rubik;
+}
+
+.auth-box {
+  width: 420px;
+}
+
+.cta {
+  background-color: #506cfd !important;
+  font-weight: bold;
+  transition: 0.5s;
+}
+
+.text-main {
+  color: #506cfd !important;
+}
+
+.cta:hover {
+  background-color: #3c57df !important;
+}
+
+.cta:focus {
+  outline: none !important;
+  box-shadow: none;
+}
+
+.sidebar {
+  width: 14%;
+  height: 100%;
+  background-color: #10002b;
+}
+
+@media screen and (max-width: 576px) {
+  body, html, #root {
+    background-color: #fff !important;
+    height: 100%;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .auth-box {
+    background-color: #fff !important;
+    border: none;
+    width: 100%;
+    box-shadow: none !important;
+  }
+}

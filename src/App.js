@@ -1,28 +1,31 @@
 import React from 'react'
 
-import Detail from './pages/Detail'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Catalog from './pages/Catalog'
-import ListData from './pages/ListData'
+import Auth from './pages/Auth'
+import Dashboard from './pages/Dashboard'
 
 import {
   BrowserRouter,
   Route,
-  Switch
+  Switch,
+  Redirect
 } from 'react-router-dom'
 
 class App extends React.Component {
+  PrivateRoute = (props) => {
+    return !localStorage.getItem('token') ? (
+      <Redirect to="/auth/login" />
+    ) : (
+      <Route {...props}>{props.children}</Route>
+    )
+  }
+
   render() {
     return (
       <>
         <BrowserRouter>
           <Switch>
-            <Route exact path="/detail/1" component={Detail} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
-            <Route exact path="/catalog" component={Catalog} />
-            <Route exact path="/list-data" component={ListData} />
+            <Route path="/auth" component={Auth} />
+            <Route path="/dashboard" component={Dashboard} />
           </Switch>
         </BrowserRouter>
       </>

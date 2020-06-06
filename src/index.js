@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import './assets/style.css'
+import './assets/main.css'
 
 import 'jquery'
 import 'popper.js/dist/popper'
