@@ -7,16 +7,17 @@ import {
 import qs from 'querystring'
 
 const auth = {
-  register: async (data) => {
+  register: (data) => {
     const { email, password } = data
-    return await Axios.post(appUrl('auth/register'), qs.stringify({ email, password }))
+    return Axios.post(appUrl('auth/register'), qs.stringify({ email, password }))
   },
-  login: async (data) => {
+  login: (data) => {
     const { email, password } = data
-    return await Axios.post(appUrl('auth/login'), qs.stringify({ email, password }))
+    return Axios.post(appUrl('auth/login'), qs.stringify({ email, password }))
   },
-  logout: async () => {
+  logout: () => {
     localStorage.removeItem('token')
+    localStorage.removeItem('session_user')
   }
 }
 

@@ -41,8 +41,8 @@ class Catalog extends React.Component {
 
   bookRender = (book, index) => (
     <div className="col-6 col-xs-12 col-md-4 col-lg-3 px-2 mb-4" key={index}>
-      <div className="card h-100 card-hoverable">
-        <Link to={`dashboard/detail/${book.id}`}>
+      <div className="card h-100 card-hoverable border-0 shadow-sm">
+        <Link to={`/dashboard/detail/${book.id}`}>
           <div className="card-img-top bg-secondary w-100" style={{height: "180px", backgroundImage: `url(${book.image})`, backgroundSize: "cover"}}>
           </div>
         </Link>

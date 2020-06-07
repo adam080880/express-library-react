@@ -26,6 +26,7 @@ class Auth extends React.Component {
     this.state = {
       email: '',
       password: '',
+      cpassword: '',
       isLoading: false,
       success: false
     }
@@ -36,6 +37,16 @@ class Auth extends React.Component {
     this.setState({
       isLoading: true
     })
+
+    const { password, email } = this.state
+
+    if (email.length < 1 || password.length < 1) {
+      Swal.fire(
+        'Register Failed',
+        'All field must be filled',
+        'error'
+      )
+    }
 
     const login = AuthModel.login(this.state)
     login.then((res) => {
@@ -51,7 +62,7 @@ class Auth extends React.Component {
         })
 
         setTimeout(() => {
-          this.props.history.push('/dashboard')
+          this.props.history.push('/dashboard/catalog')
         }, 1000)
       })
     })
@@ -72,13 +83,55 @@ class Auth extends React.Component {
   register = (e) => {
     e.preventDefault()
 
-    this.props.history.push('/auth/login')
+    const { cpassword, password, email } = this.state
+
+    if (cpassword !== password) {
+      Swal.fire(
+        'Register Failed',
+        'Confirm password and password are not equals',
+        'error'
+      )
+      return ;
+    }
+
+    if (email.length < 1 || password.length < 1 || cpassword.length < 1) {
+      Swal.fire(
+        'Register Failed',
+        'All field must be filled',
+        'error'
+      )
+    }
+
+    const regis = AuthModel.register(this.state)
+    regis.then((res) => {
+      Swal.fire(
+        'Register Success',
+        'Redirect to login',
+        'success'
+      ).then(() => {
+        this.setState({
+          isLoading: true
+        })
+
+        setTimeout(() => {
+          this.setState({
+            isLoading: false
+          })
+          
+          this.props.history.push('/auth/login')
+        }, 1000)
+      })
+    })
+    .catch((rej) => {
+
+    })
   }
 
   render() {
     return (
       <>
-        <Card color="white" className="auth-box m-auto mt-0 mt-lg-5 shadow-sm p-3 border-0 rounded-0">
+        <div className="py-5"></div>
+        <Card color="white" className="auth-box mx-auto shadow-sm p-3 border-0 rounded-0">
           {!this.state.isLoading && (
             <CardBody>
               <Switch>
@@ -104,11 +157,15 @@ class Auth extends React.Component {
                   <form onSubmit={this.register}>
                     <FormGroup>
                       <Label>Email</Label>
-                      <Input type="text" value={this.state.email} onChange={(e) => this.setState({email: e.target.value})} id="email" placeholder="Your Email"/>
+                      <Input type="text" value={this.state.email} onChange={(e) => this.setState({email: e.target.value})} id="email" placeholder="email"/>
                     </FormGroup>
                     <FormGroup>
                       <Label>Password</Label>
-                      <Input type="password" value={this.state.password} onChange={(e) => this.setState({password: e.target.value})} id="password" placeholder="Your Password"/>
+                      <Input type="password" value={this.state.password} onChange={(e) => this.setState({password: e.target.value})} id="password" placeholder="password"/>
+                    </FormGroup>
+                    <FormGroup>
+                      <Label>Confirm Password</Label>
+                      <Input type="password" value={this.state.cpassword} onChange={(e) => this.setState({cpassword: e.target.value})} id="c_password" placeholder="Confirm password"/>
                     </FormGroup>
                     <div className="d-flex flex-column align-items-center mt-4">
                       <Button type="submit" className="px-4 rounded-pill cta border-0 align-self-stretch">Register</Button>
