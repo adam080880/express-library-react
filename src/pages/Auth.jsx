@@ -143,7 +143,12 @@ class Auth extends React.Component {
   render() {
     return (
       <>
-        <div className="py-5"></div>
+        <div onClick={() => this.props.history.push('/dashboard/catalog')} className="position-fixed rounded-circle bg-dark text-white m-3 d-flex align-items-center justify-content-center" style={{width: "35px", height: "35px", cursor: "pointer"}}>
+          <i className="fas fa-arrow-left"></i>
+        </div>
+        <div className="py-5">
+          
+        </div>
         <Card color="white" className="auth-box mx-auto shadow-sm p-3 border-0 rounded-0">
           {!this.state.isLoading && (
             <CardBody>

@@ -2,7 +2,9 @@ import React from 'react'
 
 import {
   Breadcrumb,
-  BreadcrumbItem
+  BreadcrumbItem,
+  Modal,
+  ModalBody
 } from 'reactstrap'
 
 import {
@@ -10,6 +12,7 @@ import {
 } from 'react-router-dom'
 
 import BookModel from '../models/books'
+import TransactionModel from '../models/transaction'
 import Swal from 'sweetalert2'
 
 class Detail extends React.Component {
@@ -17,8 +20,39 @@ class Detail extends React.Component {
     super(props)
 
     this.state = {
-      detail: {}
+      detail: {},
+      isOpen: false,
+      promise_returned_at: '',
+      book_id: this.props.match.params.id
     }
+  }
+
+  toggleModal = () => {
+    this.setState({
+      isOpen: !this.state.isOpen
+    })
+  }
+
+  booking = (e) => {
+    e.preventDefault()
+
+    const booking = TransactionModel.booking(this.props.match.params.id, this.state)
+    booking.then((res) => {
+      Swal.fire(
+        'Success',
+        'Booking success',
+        'success'
+      ).then(() => {
+        this.props.history.push('/dashboard/catalog')
+      })
+    })
+    .catch((rej) => {
+      Swal.fire(
+        'Failed',
+        rej.response.data.msg,
+        'error'
+      )
+    })
   }
 
   componentDidMount() {
@@ -42,6 +76,20 @@ class Detail extends React.Component {
   render() {
     return (
       <div className="container-fluid p-0 mb-5">
+        {/* modal */}
+          <Modal isOpen={this.state.isOpen} toggle={this.toggleModal}>
+            <ModalBody>
+              <h3 className="mb-4 font-weight-bold">Booking</h3>
+              <form method="post" onSubmit={this.booking}>
+                <div className="form-group">
+                  <label htmlFor="promised_returned_at" className="label-control">Return date</label>
+                  <input className="form-control" type="date" name="promised_returned_at" id="promised_returned_at" onChange={(e) => this.setState({ promise_returned_at: e.target.value })} />
+                </div>
+                <button className="cta rounded-pill mt-3 mb-2 px-3 py-2 border-0 text-white" type="submit">Book</button>
+              </form>
+            </ModalBody>
+          </Modal>
+        {/* modal */}
         <Breadcrumb>
           <BreadcrumbItem>
             <span>Dashboard</span>
@@ -54,7 +102,7 @@ class Detail extends React.Component {
           </BreadcrumbItem>
         </Breadcrumb>
         <div className="w-100 bg-secondary" style={{height: "280px", backgroundSize: "cover", backgroundPosition: "center", backgroundImage: `url(${this.state.detail.image})` }}>
-          <div onClick={() => this.props.history.goBack()} className="position-absolute rounded-circle bg-white m-3 d-flex align-items-center justify-content-center" style={{width: "35px", height: "35px", cursor: "pointer"}}>
+          <div onClick={() => this.props.history.push('/dashboard/catalog')} className="position-absolute rounded-circle bg-white m-3 d-flex align-items-center justify-content-center" style={{width: "35px", height: "35px", cursor: "pointer"}}>
             <i className="fas fa-arrow-left"></i>
           </div>
         </div>
@@ -72,7 +120,7 @@ class Detail extends React.Component {
                       <div className="badge badge-secondary">{this.state.detail.genre}</div>
                     </div>
                     {localStorage.getItem('token') && (<div className="control d-flex align-items-center">
-                      <button className="rounded-pill mx-auto mx-lg-0 mt-3 mt-lg-0 cta border-0 px-4 py-2 text-white">Borrow</button>
+                      <button disabled={!(this.state.detail.status === 'available')} onClick={this.toggleModal} className="rounded-pill mx-auto mx-lg-0 mt-3 mt-lg-0 cta border-0 px-4 py-2 text-white">Booking</button>
                     </div>)}
                   </div>
                   <ul className="list-style-type-none list-unstyled">

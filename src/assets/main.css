@@ -4,6 +4,10 @@ body, html, #root, .container-fluid, .dashboard.row {
   font-family: Rubik;
 }
 
+body {
+  padding-right: 0px !important;
+}
+
 .auth-box {
   width: 420px;
 }
@@ -14,12 +18,21 @@ body, html, #root, .container-fluid, .dashboard.row {
   transition: 0.5s;
 }
 
+.cta:disabled {
+  background-color: #8398ff !important;
+  color: #506cfd !important;
+}
+
 .text-main {
   color: #a5acca !important;
 }
 
 .cta:hover {
   background-color: #3c57df !important;
+}
+
+.cta:disabled:hover {
+  background-color: #8398ff !important;
 }
 
 .cta:focus {

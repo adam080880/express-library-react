@@ -6,10 +6,10 @@ import {
 
 // import qs from 'querystring'
 
-const books = {
-  find: (id) => {
-    return Axios.get(appUrl(`books/${id}`))
+const genres = {
+  get: () => {
+    return Axios.get(appUrl(`genre`))
   }
 }
 
-export default books
+export default genres
