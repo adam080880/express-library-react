@@ -34,15 +34,14 @@ class Catalog extends React.Component {
   }
 
   condition = (props) => {
-    if (props.state.isLoading) return <h1>Loading..</h1>
-    else if (props.state.data.length > 0) return props.dataRender
+    if (this.state.isLoading || props.state.data.length > 0) return props.dataRender
     else if (props.state.data.length === 0 && !props.state.isLoading) return <h1>Data is not available</h1>
   }
 
   bookRender = (book, index) => (
-    <div className="col-6 col-xs-12 col-md-4 col-lg-3 px-2 mb-4" key={index}>
+    <div className="col-12 col-xs-12 col-md-4 col-lg-3 px-0 p-0 px-lg-2 mb-4" key={index}>
       <div className="card h-100 card-hoverable border-0 shadow-sm">
-        <Link to={`/dashboard/detail/${book.id}`}>
+        <Link to={`/dashboard/catalog/detail/${book.id}`}>
           <div className="card-img-top bg-secondary w-100" style={{height: "180px", backgroundImage: `url(${book.image})`, backgroundSize: "cover"}}>
           </div>
         </Link>
@@ -94,12 +93,19 @@ class Catalog extends React.Component {
               <Link to="/dashboard/catalog">Catalog</Link>
             </BreadcrumbItem>
           </Breadcrumb>
-          <div id="listBookWrapper" className="pl-3 pr-2 mt-3">
+          <div id="listBookWrapper" className="px-lg-3 px-1 mt-3">
             <div className="row no-gutters">
               <this.condition state={this.state} dataRender={this.state.data.map(this.bookRender)}></this.condition>
             </div>
-            <div className="text-center mt-3" id="wrapperButton">
+            {!this.state.isLoading && (<div className="text-center mt-3" id="wrapperButton">
               <div className="btn btn-outline-primary px-4 rounded" onClick={this.nextPage}>More</div>
+            </div>)}
+            <div className="w-100 text-center">
+              {this.state.isLoading && (
+                <div className="spinner-border text-primary mx-auto my-5">
+                  <div className="sr-only">Loading...</div>
+                </div>
+              )}
             </div>
           </div>
         </div>

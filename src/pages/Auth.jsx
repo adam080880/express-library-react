@@ -23,6 +23,10 @@ class Auth extends React.Component {
   constructor(props) {
     super(props)
 
+    if (localStorage.getItem('token')) {
+      props.history.push('/dashboard/catalog')
+    }
+
     this.state = {
       email: '',
       password: '',
@@ -117,13 +121,22 @@ class Auth extends React.Component {
           this.setState({
             isLoading: false
           })
-          
+
           this.props.history.push('/auth/login')
         }, 1000)
       })
     })
     .catch((rej) => {
-
+      Swal.fire(
+        'Login Failed',
+        rej.response.data.msg,
+        'error'
+      )
+    })
+    .finally(() => {
+      this.setState({
+        isLoading: false
+      })
     })
   }
 
@@ -144,7 +157,7 @@ class Auth extends React.Component {
                     </FormGroup>
                     <FormGroup>
                       <Label>Password</Label>
-                      <Input type="password" value={this.state.password} onChange={(e) => this.setState({password: e.target.value})} id="password" placeholder="Your Password"/>
+                      <Input type="password" value={this.state.password} onChange={(e) => this.setState({password: e.target.value})} id="password" placeholder="Your Password" autoComplete={"true"} />
                     </FormGroup>
                     <div className="d-flex flex-column align-items-center mt-4">
                       <Button type="submit" className="px-4 rounded-pill cta border-0 align-self-stretch">Login</Button>
@@ -161,11 +174,11 @@ class Auth extends React.Component {
                     </FormGroup>
                     <FormGroup>
                       <Label>Password</Label>
-                      <Input type="password" value={this.state.password} onChange={(e) => this.setState({password: e.target.value})} id="password" placeholder="password"/>
+                      <Input type="password" value={this.state.password} onChange={(e) => this.setState({password: e.target.value})} id="password" placeholder="password" autoComplete={"false"}/>
                     </FormGroup>
                     <FormGroup>
                       <Label>Confirm Password</Label>
-                      <Input type="password" value={this.state.cpassword} onChange={(e) => this.setState({cpassword: e.target.value})} id="c_password" placeholder="Confirm password"/>
+                      <Input type="password" value={this.state.cpassword} onChange={(e) => this.setState({cpassword: e.target.value})} id="c_password" placeholder="Confirm password" autoComplete={"false"}/>
                     </FormGroup>
                     <div className="d-flex flex-column align-items-center mt-4">
                       <Button type="submit" className="px-4 rounded-pill cta border-0 align-self-stretch">Register</Button>
