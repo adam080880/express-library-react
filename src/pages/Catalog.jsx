@@ -20,6 +20,7 @@ class Catalog extends React.Component {
       isLoading: true,
       data: [], 
       pageInfo: {},
+      search: ''
     }
   }
 
@@ -50,6 +51,15 @@ class Catalog extends React.Component {
     await this.fetchData(param)
   }
 
+  search = (e) => {
+    e.preventDefault()
+    const query = this.props.location.search.slice(1)
+    const param = qs.stringify({...qs.parse(query), ...{search: this.state.search}})
+    this.props.history.push(`/dashboard/catalog?${param}`)
+
+    this.fetchData(qs.parse(param))
+  }
+
   condition = (props) => {
     if (this.state.isLoading || props.state.data.length > 0) return props.dataRender
     else if (props.state.data.length === 0 && !props.state.isLoading) return <h1>Data is not available</h1>
@@ -59,7 +69,7 @@ class Catalog extends React.Component {
     const params = {...qs.parse(this.props.location.search.slice(1)), ...{page: 1}, ...{ sort: param } }
     this.props.history.push('/dashboard/catalog?'+qs.stringify(params))
 
-    window.location.reload(false)
+    this.fetchData(params)
   }
 
   bookRender = (book, index) => (
@@ -100,48 +110,51 @@ class Catalog extends React.Component {
               <span>Dashboard</span>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <Link to="/dashboard/catalog" onClick={e => {e.preventDefault(); this.props.history.push('/dashboard/catalog'); window.location.reload(false)}}>Catalog</Link>
+              <Link to="/dashboard/catalog">Catalog</Link>
             </BreadcrumbItem>
           </Breadcrumb>
           <div className="d-flex flex-row align-items-center justify-content-between px-4 pb-0 mt-3">
             <h3>List Book</h3>
             <div className="filter d-flex align-items-center">
-            <div className="dropdown">
-                <button className="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Sort By
-                </button>
-                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <Link className="dropdown-item" to="#" onClick={e => {e.preventDefault(); this.sortBy('desc')}}>Desc</Link>
-                  <Link className="dropdown-item" to="#" onClick={e => {e.preventDefault(); this.sortBy('asc')}}>Asc</Link>
+              <form onSubmit={this.search}>
+                <input type="text" className="form-control" onChange={e => this.setState({search: e.target.value})} placeholder="Search book" />
+              </form>
+              <div className="dropdown ml-2">
+                  <button className="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Sort By
+                  </button>
+                  <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <Link className="dropdown-item" to="#" onClick={e => {e.preventDefault(); this.sortBy('desc')}}>Desc</Link>
+                    <Link className="dropdown-item" to="#" onClick={e => {e.preventDefault(); this.sortBy('asc')}}>Asc</Link>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="w-100 text-center">
+            <div className="w-100 text-center">
               {this.state.isLoading && (
                 <div className="spinner-border text-primary mx-auto my-5">
                   <div className="sr-only">Loading...</div>
                 </div>
               )}
-          </div>
-          {!this.state.isLoading && (<div id="listBookWrapper" className="px-lg-3 px-1 mt-2">
-            <div className="row no-gutters">
-              <this.condition state={this.state} dataRender={this.state.data.map(this.bookRender)}></this.condition>
             </div>
-          </div>)}
-          <div className="d-flex flex-row align-items-center justify-content-between w-100 px-4">
-            <div className="btn-wrapper">
-            <button className="d-inline-flex btn btn-outline-secondary" disabled={params.page > 1 ? false : true} onClick={()=>this.fetchData({...params, page: parseInt(params.page) - 1})}>Prev</button>
-            </div>                
-            <div className="wrapper">
-              {!this.state.isLoading && [...Array(this.state.pageInfo.totalPage)].map((o, i) => (
-                <button onClick={()=>this.fetchData({...params, page: params.page? i+1 : i+1})} className='mx-1 btn btn-outline-secondary' key={i.toString()}>{i+1}</button>
-              ))}
+            {!this.state.isLoading && (<div id="listBookWrapper" className="px-lg-3 px-1 mt-2">
+              <div className="row no-gutters">
+                <this.condition state={this.state} dataRender={this.state.data.map(this.bookRender)}></this.condition>
+              </div>
+            </div>)}
+            <div className="d-flex flex-row align-items-center justify-content-between w-100 px-4">
+              <div className="btn-wrapper">
+              <button className="d-inline-flex btn btn-outline-secondary" disabled={params.page > 1 ? false : true} onClick={()=>this.fetchData({...params, page: parseInt(params.page) - 1})}>Prev</button>
+              </div>                
+              <div className="wrapper">
+                {!this.state.isLoading && [...Array(this.state.pageInfo.totalPage)].map((o, i) => (
+                  <button onClick={()=>this.fetchData({...params, page: params.page? i+1 : i+1})} className='mx-1 btn btn-outline-secondary' key={i.toString()}>{i+1}</button>
+                ))}
+              </div>
+              <div className="btn-wrapper">
+                <button className="d-inline-flex btn btn-outline-secondary" disabled={params.page >= this.state.pageInfo.totalPage ? true : false} onClick={()=>this.fetchData({...params, page: parseInt(params.page) + 1})}>Next</button>
+              </div> 
             </div>
-            <div className="btn-wrapper">
-              <button className="d-inline-flex btn btn-outline-secondary" disabled={params.page >= this.state.pageInfo.totalPage ? true : false} onClick={()=>this.fetchData({...params, page: parseInt(params.page) + 1})}>Next</button>
-            </div> 
-          </div>
         </div>
       </>
     )

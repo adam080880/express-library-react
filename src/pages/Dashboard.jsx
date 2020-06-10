@@ -17,11 +17,11 @@ import BookModel from '../models/books'
 
 import Catalog from './Catalog'
 import Detail from './Detail'
+import Transaction from './Transaction'
+import Config from './Config'
 
 import Swal from 'sweetalert2'
 import Select from 'react-select'
-
-import qs from 'querystring'
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -45,7 +45,6 @@ class Dashboard extends React.Component {
       genre_id: '',
       file: [],
       file_: [],
-      search: '' 
     }
   }
 
@@ -71,14 +70,6 @@ class Dashboard extends React.Component {
       isOpen: !this.state.isOpen,
       currentForm: form,
     })
-  }
-
-  search = (e) => {
-    e.preventDefault()
-    const params = {...qs.parse(this.props.location.search.slice(1)), ...{search: this.state.search}, ...{page: 1} }
-    this.props.history.push('/dashboard/catalog?'+qs.stringify(params))
-
-    window.location.reload(false)
   }
 
   completeRegis = (e) => {
@@ -229,10 +220,10 @@ class Dashboard extends React.Component {
                     <div className="mt-3 ml-0 mb-5">
                       <div className="nav pl-0 flex-column sidebar-menu">
                         <div className="nav-item">
-                          <Link to="/dashboard/catalog" onClick={e => {e.preventDefault(); this.props.history.push('/dashboard/catalog'); window.location.reload(false)}} className="nav-link ml-0 pl-0">Catalog</Link>
+                          <Link to="/dashboard/catalog" className="nav-link ml-0 pl-0">Catalog</Link>
                         </div>
                         {this.state.session_user && (<div className="nav-item">
-                          <Link to="/dashboard/history" className="nav-link ml-0 pl-0">History</Link>
+                          <Link to="/dashboard/history" className="nav-link ml-0 pl-0">History Transaction</Link>
                         </div>)}
                         {this.state.session_user && 
                           !this.state.session_user.name && (<div className="nav-item">
@@ -241,6 +232,9 @@ class Dashboard extends React.Component {
                         }
                         {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="nav-item">
                           <Link to="#" onClick={() => this.toggle(2)} className="nav-link ml-0 pl-0">Add Book</Link>
+                        </div>)}
+                        {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="nav-item">
+                          <Link to="/dashboard/configs" className="nav-link ml-0 pl-0">Configs</Link>
                         </div>)}
                       </div>
                     </div>
@@ -255,12 +249,6 @@ class Dashboard extends React.Component {
                   <Link className="navbar-brand font-weight-bold" to="/">
                     EXP.L!bs
                   </Link>
-                  <div id="searchWrapper" className="w-50 d-flex flex-row align-items-center">
-                    <span className="fas fa-search fa-sm position-absolute text-muted" style={{marginLeft: "18px"}}></span>
-                    <form className="w-100" onSubmit={this.search}>
-                      <input type="search" onChange={e => this.setState({search: e.target.value})} className="form-control rounded-pill px-3 pl-5" placeholder="Search books" />
-                    </form>
-                  </div>
                   <ul className="navbar-nav d-md-none d-sm-none d-xs-none d-lg-block d-none">
                     {localStorage.getItem('token') && (
                       <li className="nav-item">
@@ -275,9 +263,10 @@ class Dashboard extends React.Component {
                   </ul>
                 </div>
 
+                  <Route exact path="/dashboard/history" component={Transaction} />
                   <Route exact path="/dashboard/catalog" component={Catalog} />
+                  <Route exact path="/dashboard/configs" component={Config} />
                   <Route exact path="/dashboard/catalog/detail/:id" component={Detail} />
-                  <Route exact path="/dashboard/history" component={Detail} />
               </Col>
             </Row>
           </div>
