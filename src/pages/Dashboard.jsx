@@ -13,11 +13,15 @@ import {
 import AuthModel from '../models/auth'
 import GenreModel from '../models/genres'
 import AuthorModel from '../models/authors'
+import BookModel from '../models/books'
 
 import Catalog from './Catalog'
 import Detail from './Detail'
 
 import Swal from 'sweetalert2'
+import Select from 'react-select'
+
+import qs from 'querystring'
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -34,7 +38,14 @@ class Dashboard extends React.Component {
       genderRegis: '',
       currentForm: 0,
       genres: [],
-      authors: []
+      authors: [],
+      title: '',
+      description: '',
+      author_id: '',
+      genre_id: '',
+      file: [],
+      file_: [],
+      search: '' 
     }
   }
 
@@ -62,6 +73,14 @@ class Dashboard extends React.Component {
     })
   }
 
+  search = (e) => {
+    e.preventDefault()
+    const params = {...qs.parse(this.props.location.search.slice(1)), ...{search: this.state.search}, ...{page: 1} }
+    this.props.history.push('/dashboard/catalog?'+qs.stringify(params))
+
+    window.location.reload(false)
+  }
+
   completeRegis = (e) => {
     e.preventDefault()
     const { nameRegis: name, phoneRegis: phone, birthRegis: birth, genderRegis: gender } = this.state
@@ -83,6 +102,35 @@ class Dashboard extends React.Component {
         rej.response.data.msg,
         'error'
       )
+    })
+  }
+
+  submitForm = (e) => {
+    e.preventDefault()
+
+    if(this.state.file_.size >= 1240000 || this.state.file_.type.split('/')[0] !== 'image') {
+      Swal.fire('Failed', 'Max file size is 1240KB and file type just image', 'error')
+      return ;
+    }
+
+    let formData = new FormData()
+    formData.append('image', this.state.file_)
+    formData.set('title', this.state.title)
+    formData.set('description', this.state.description)
+    formData.set('author_id', this.state.author_id)
+    formData.set('genre_id', this.state.genre_id)
+
+    const post = BookModel.post(formData)
+    post.then((res) => {
+      Swal.fire('Success', 'Book has been created', 'success').then(() => {
+        this.setState({
+          isOpen: false,
+        })
+        this.props.history.push('/dashboard/catalog?page=1')
+      })
+    })
+    .catch((rej) => {
+      Swal.fire('Error', rej.response.data.msg, 'error')
     })
   }
 
@@ -151,22 +199,19 @@ class Dashboard extends React.Component {
                 </div>
                 <div className="form-group">
                   <label htmlFor="genre" className="label-control">Genre</label>
-                  <div className="w-100">
-                    <select name="genre" id="genre" className="form-control" onChange={(e) => this.setState({genre_id: e.target.value})}>
-                      <option value="">Choose a genre</option>
-                      {this.state.genres.map(this.renderGenre)}
-                    </select>
-                  </div>
+                  <Select onChange={(value) => this.setState({ genre_id: value.value })} className="flex-grow-1" placeholder="Choose a genre" options={this.state.genres.map(val => Object({value: val.id, label: val.name}))}/>
                 </div>
                 <div className="form-group">
                   <label htmlFor="author" className="label-control">Author</label>
-                  <div className="w-100">
-                    <select name="author" id="author" className="form-control" onChange={(e) => this.setState({author_id: e.target.value})}>
-                      <option value="">Choose a author</option>
-                      {this.state.authors.map(this.renderAuthor)}
-                    </select>
-                  </div>
+                  <Select onChange={(value) => this.setState({ author_id: value.value })} className="flex-grow-1" placeholder="Choose a author" options={this.state.authors.map((val) => { return { value: val.id, label: val.name } }) } />
                 </div>
+                <div className="form-group w-100 d-flex justify-content-center">
+                  {this.state.file.length > 0 && (<img src={this.state.file} alt="Preview" width="200px" className="m-auto"/>)}
+                </div>
+                <div className="form-group">
+                  <input type="file" accept="image/*" name="file" id="file" onChange={(e) => this.setState({file: URL.createObjectURL(e.target.files[0]), file_: e.target.files[0]})}/>
+                </div>
+                <button type="submit" className="mt-4 cta rounded-pill px-3 text-white border-0 py-2">Submit</button>
               </ModalBody>
             </form>)}
             {/* Form Add Book */}
@@ -184,7 +229,7 @@ class Dashboard extends React.Component {
                     <div className="mt-3 ml-0 mb-5">
                       <div className="nav pl-0 flex-column sidebar-menu">
                         <div className="nav-item">
-                          <Link to="/dashboard/catalog" className="nav-link ml-0 pl-0">Catalog</Link>
+                          <Link to="/dashboard/catalog" onClick={e => {e.preventDefault(); this.props.history.push('/dashboard/catalog'); window.location.reload(false)}} className="nav-link ml-0 pl-0">Catalog</Link>
                         </div>
                         {this.state.session_user && (<div className="nav-item">
                           <Link to="/dashboard/history" className="nav-link ml-0 pl-0">History</Link>
@@ -212,7 +257,9 @@ class Dashboard extends React.Component {
                   </Link>
                   <div id="searchWrapper" className="w-50 d-flex flex-row align-items-center">
                     <span className="fas fa-search fa-sm position-absolute text-muted" style={{marginLeft: "18px"}}></span>
-                    <input type="search" className="form-control rounded-pill px-3 pl-5" placeholder="Search books" />
+                    <form className="w-100" onSubmit={this.search}>
+                      <input type="search" onChange={e => this.setState({search: e.target.value})} className="form-control rounded-pill px-3 pl-5" placeholder="Search books" />
+                    </form>
                   </div>
                   <ul className="navbar-nav d-md-none d-sm-none d-xs-none d-lg-block d-none">
                     {localStorage.getItem('token') && (

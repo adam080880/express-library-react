@@ -20,7 +20,6 @@ class Catalog extends React.Component {
       isLoading: true,
       data: [], 
       pageInfo: {},
-      page: 1
     }
   }
 
@@ -30,10 +29,17 @@ class Catalog extends React.Component {
     const param = qs.stringify(params)
     const url = appUrl(`books?${param}&limit=4`)
 
-    const results = await Axios.get(url)
-    const { data, pageInfo } = results.data
-
-    this.setState({ data, pageInfo, isLoading: false })
+    const results = Axios.get(url)
+    results.then((res) => {
+      this.setState({ data: res.data.data, pageInfo: res.data.pageInfo })
+    })
+    .catch((rej) => {
+      this.setState({ data: [] })
+    })
+    .finally(() => {
+      this.setState({isLoading: false})
+    })
+    
     if (params) {
       this.props.history.push(`/dashboard/catalog?${param}`)
     }
@@ -47,6 +53,13 @@ class Catalog extends React.Component {
   condition = (props) => {
     if (this.state.isLoading || props.state.data.length > 0) return props.dataRender
     else if (props.state.data.length === 0 && !props.state.isLoading) return <h1>Data is not available</h1>
+  }
+  
+  sortBy = (param) => {
+    const params = {...qs.parse(this.props.location.search.slice(1)), ...{page: 1}, ...{ sort: param } }
+    this.props.history.push('/dashboard/catalog?'+qs.stringify(params))
+
+    window.location.reload(false)
   }
 
   bookRender = (book, index) => (
@@ -81,19 +94,27 @@ class Catalog extends React.Component {
     params.page = params.page || 1
     return (
       <>
-        <div className="container-fluid p-0 mb-5">
+        <div className="container-fluid p-0 mb-5" style={{overflowX: 'hidden'}}>
           <Breadcrumb>
             <BreadcrumbItem>
               <span>Dashboard</span>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <Link to="/dashboard/catalog">Catalog</Link>
+              <Link to="/dashboard/catalog" onClick={e => {e.preventDefault(); this.props.history.push('/dashboard/catalog'); window.location.reload(false)}}>Catalog</Link>
             </BreadcrumbItem>
           </Breadcrumb>
           <div className="d-flex flex-row align-items-center justify-content-between px-4 pb-0 mt-3">
             <h3>List Book</h3>
             <div className="filter d-flex align-items-center">
-              Filter
+            <div className="dropdown">
+                <button className="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Sort By
+                </button>
+                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <Link className="dropdown-item" to="#" onClick={e => {e.preventDefault(); this.sortBy('desc')}}>Desc</Link>
+                  <Link className="dropdown-item" to="#" onClick={e => {e.preventDefault(); this.sortBy('asc')}}>Asc</Link>
+                </div>
+              </div>
             </div>
           </div>
           <div className="w-100 text-center">

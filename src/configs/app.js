@@ -1,5 +1,10 @@
 const name = 'express library'
-const appUrl = (uri) => `http://192.168.0.8:8080/${uri}`
+
+require('dotenv').config()
+
+const {REACT_APP_API_URL} = process.env
+
+const appUrl = (uri) => `${REACT_APP_API_URL}${uri}`
 
 const template = (status, data, o = {}) => {
   return {
