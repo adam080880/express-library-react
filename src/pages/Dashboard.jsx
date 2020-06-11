@@ -119,6 +119,7 @@ class Dashboard extends React.Component {
           isOpen: false,
         })
         this.props.history.push('/dashboard/catalog?page=1')
+        window.location.reload(false)
       })
     })
     .catch((rej) => {
@@ -173,6 +174,7 @@ class Dashboard extends React.Component {
                     </div>
                   </div>
                   <button type="submit" className="mt-4 cta rounded-pill px-3 text-white border-0 py-2">Submit</button>
+                  <button className="cta cta-secondary px-3 py-2 rounded-pill text-white border-0 ml-2 mt-3" type="button" onClick={e => this.toggle(0)}>Close</button>
                 </ModalBody>
               </form>)}
             {/* Form Biodata */}
@@ -204,6 +206,7 @@ class Dashboard extends React.Component {
                   <input type="file" accept="image/*" name="file" id="file" onChange={(e) => this.setState({file: URL.createObjectURL(e.target.files[0]), file_: e.target.files[0]})}/>
                 </div>
                 <button type="submit" className="mt-4 cta rounded-pill px-3 text-white border-0 py-2">Submit</button>
+                <button className="cta cta-secondary px-3 py-2 rounded-pill text-white border-0 ml-2 mt-3" type="button" onClick={e => this.toggle(0)}>Close</button>
               </ModalBody>
             </form>)}
             {/* Form Add Book */}
@@ -211,6 +214,49 @@ class Dashboard extends React.Component {
           </Modal>
         {/* End Modal */}
           <div className="container-fluid px-0">
+            <div className="bottom-bar border d-block d-lg-none px-3 py-2 position-fixed flex-row d-flex bg-white shadow-sm align-items-center justify-content-between" style={{width: "100%", bottom: 0, zIndex: 100, overflowX: 'auto'}}>
+              <div className="d-flex align-items-center flex-column justify-content-center">
+                  <Link to="/dashboard/catalog" style={{fontSize: "13px"}} className="ml-0 pl-0 text-dark">
+                  <span style={{fontSize: "18px", textAlign: "center"}} className="fas fa-book mb-1 d-block text-dark"></span>
+                    <span style={{fontSize: '13px', color: 'black'}}>Catalog</span>
+                  </Link>
+              </div>
+              {this.state.session_user && (<div className="d-flex align-items-center flex-column justify-content-center">
+                <div className="d-flex align-items-center flex-column justify-content-center">
+                  <Link to="/dashboard/history" style={{fontSize: "13px"}} className="ml-0 pl-0">
+                    <span style={{fontSize: "18px", textAlign: "center"}} className="fas fa-history mb-1 text-dark d-block"></span>
+                    <span style={{fontSize: '13px', color: 'black'}}>History</span>
+                  </Link>
+                </div>
+              </div>)}
+              {this.state.session_user && 
+                !this.state.session_user.name && (<div className="d-flex align-items-center flex-column justify-content-center">
+                <div className="d-flex align-items-center flex-column justify-content-center">
+                  <Link to="#" onClick={() => this.toggle(1)} style={{fontSize: "13px"}} className="ml-0 pl-0">
+                    <span style={{fontSize: "18px", textAlign: "center"}} className="fas fa-scroll mb-1 text-dark"></span>
+                    <span style={{fontSize: '13px', color: 'black'}}>Biodata</span>
+                  </Link>
+                </div>
+              </div>)}
+              {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="d-flex align-items-center flex-column justify-content-center">
+                <Link to="#" onClick={e => this.toggle(2)} style={{fontSize: "13px"}} className="ml-0 pl-0">
+                    <span style={{fontSize: "18px", textAlign: "center"}} className="fas fa-plus mb-1 text-dark d-block"></span>
+                    <span style={{fontSize: '13px', color: 'black'}}>Add Book</span>
+                  </Link>
+              </div>)}
+              {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="d-flex align-items-center flex-column justify-content-center">
+                  <Link to="/dashboard/users" style={{fontSize: "13px"}} className="ml-0 pl-0">
+                    <span style={{fontSize: "18px", textAlign: "center"}} className="fas fa-users mb-1 text-dark d-block"></span>
+                    <span style={{fontSize: '13px', color: 'black'}}>Users</span>
+                  </Link>
+              </div>)}
+              {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="d-flex align-items-center flex-column justify-content-center">
+              <Link to="/dashboard/configs" style={{fontSize: "13px"}} className="ml-0 pl-0">
+                    <span style={{fontSize: "18px", textAlign: "center"}} className="fas fa-cog mb-1 text-dark d-block"></span>
+                    <span style={{fontSize: '13px', color: 'black'}}>Configs</span>
+                  </Link>
+              </div>)}
+            </div>
             <Row className="dashboard mx-0">
               <div className="sidebar text-white sticky-top" style={{maxHeight: "100vh"}}>
                 <div className="d-flex flex-column justify-content-between" style={{height: "100%"}}>
@@ -229,8 +275,7 @@ class Dashboard extends React.Component {
                         {this.state.session_user && 
                           !this.state.session_user.name && (<div className="nav-item">
                             <Link to="#" onClick={() => this.toggle(1)} className="nav-link ml-0 pl-0">Complete Biodata</Link>
-                          </div>)
-                        }
+                          </div>)}
                         {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="nav-item">
                           <Link to="#" onClick={() => this.toggle(2)} className="nav-link ml-0 pl-0">Add Book</Link>
                         </div>)}
@@ -248,15 +293,15 @@ class Dashboard extends React.Component {
                   </div>
                 </div>
               </div>
-              <Col className="px-0">
-                <div className="navbar navbar-expand-lg navbar-light bg-white shadow-sm d-flex flex-row justify-content-between align-items-center px-4" style={{height: "70px"}}>
+              <Col className="px-0 mb-5 mb-lg-0">
+                <div className="navbar navbar-expand-lg sticky-top navbar-light bg-white shadow-sm d-flex flex-row justify-content-between align-items-center px-4" style={{height: "70px"}}>
                   <Link className="navbar-brand font-weight-bold" to="/">
                     EXP.L!bs
                   </Link>
-                  <ul className="navbar-nav d-md-none d-sm-none d-xs-none d-lg-block d-none">
+                  <ul className="navbar-nav">
                     {localStorage.getItem('token') && (
                       <li className="nav-item">
-                        <Link to="#" className="nav-link btn btn-danger text-white font-weight-bold ml-3" onClick={this.logout}>Logout</Link>
+                        <Link to="#" className="px-3 nav-link btn btn-danger text-white font-weight-bold ml-3" onClick={this.logout}>Logout</Link>
                       </li>
                     )}
                     {!localStorage.getItem('token') && (

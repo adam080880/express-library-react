@@ -4,8 +4,6 @@ import {
   appUrl,
 } from '../configs/app'
 
-import qs from 'querystring'
-
 const authors = {
   get: (param) => {
     return Axios.get(appUrl(`user?limit=5&${param}`), {

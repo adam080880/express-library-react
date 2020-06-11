@@ -259,7 +259,7 @@ class Transaction extends React.Component {
               <Link to="/dashboard/history">History Transaction</Link>
             </BreadcrumbItem>
           </Breadcrumb>
-          <div className="d-flex flex-row align-items-center px-4 pb-0 mt-3 justify-content-between">
+          <div className="d-flex flex-column flex-lg-row align-items-center px-4 pb-0 mt-3 justify-content-between">
             <h3>History Transaction</h3>
             <div className="control d-flex align-items-center">
               <form action="" className="d-inline-flex" onSubmit={this.searchAdmin}>

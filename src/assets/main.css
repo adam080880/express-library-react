@@ -18,6 +18,13 @@ body {
   transition: 0.5s;
 }
 
+.cta-secondary {
+  background-color: #9eadf7 !important;
+  color: #506cfd !important;
+  font-weight: bold;
+  transition: 0.5s;
+}
+
 .cta:disabled {
   background-color: #8398ff !important;
   color: #506cfd !important;

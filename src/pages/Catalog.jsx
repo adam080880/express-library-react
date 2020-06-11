@@ -113,7 +113,7 @@ class Catalog extends React.Component {
               <Link to="/dashboard/catalog">Catalog</Link>
             </BreadcrumbItem>
           </Breadcrumb>
-          <div className="d-flex flex-row align-items-center justify-content-between px-4 pb-0 mt-3">
+          <div className="d-flex flex-column flex-lg-row align-items-center justify-content-between px-4 pb-0 mt-3">
             <h3>List Book</h3>
             <div className="filter d-flex align-items-center">
               <form onSubmit={this.search}>

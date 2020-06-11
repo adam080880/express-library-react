@@ -143,7 +143,7 @@ class Auth extends React.Component {
   render() {
     return (
       <>
-        <div onClick={() => this.props.history.push('/dashboard/catalog')} className="position-fixed rounded-circle bg-dark text-white m-3 d-flex align-items-center justify-content-center" style={{width: "35px", height: "35px", cursor: "pointer"}}>
+        <div onClick={() => this.props.history.push('/dashboard/catalog')} className="position-fixed rounded-circle bg-dark text-white m-3 d-flex align-items-center justify-content-center" style={{width: "35px", height: "35px", cursor: "pointer", zIndex: 100}}>
           <i className="fas fa-arrow-left"></i>
         </div>
         <div className="py-5">

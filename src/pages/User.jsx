@@ -68,7 +68,7 @@ class User extends React.Component {
   }
 
   renderUser = (val, index) => {
-    const Button = <button onClick={e => this.toggleRole(val.id)} disabled={val.role === 'super_admin'} className="btn btn-outline-primary">{val.role === 'admin' ? 'To Member' : val.role === 'super_admin' ? 'super_admin' : 'To Admin'}</button>
+    const Button = JSON.parse(localStorage.getItem('session_user')).role === 'Super Admin' && (<button onClick={e => this.toggleRole(val.id)} disabled={val.role === 'super_admin'} className="btn btn-outline-primary">{val.role === 'admin' ? 'To Member' : val.role === 'super_admin' ? 'super_admin' : 'To Admin'}</button>)
     return (
       <tr key={index}>
         <td>{val.email}</td>
@@ -96,7 +96,7 @@ class User extends React.Component {
             <Link to="/dashboard/users">Users</Link>
           </BreadcrumbItem>
         </Breadcrumb>
-        <div className="d-flex justify-content-between align-items-center px-4 pb-0">
+        <div className="d-flex flex-column flex-lg-row justify-content-between mt-3 align-items-center px-4 pb-0">
           <h3>List User</h3>
           <form onSubmit={this.search}>
             <input type="text" onChange={e => this.setState({user: e.target.value})} className="form-control" placeholder="Search user" />
@@ -107,14 +107,14 @@ class User extends React.Component {
             <div className="card border-0 shadow-sm">
               <div className="card-body">
                 <div style={{overflowX: 'auto', overflowY: 'auto'}}>
-                  <table className="mt-2 w-100 table mt-4">
+                  <table className="w-100 table">
                     <thead>
                       <tr>
                         <th>Email</th>
                         <th>Name</th>
                         <th>Phone</th>
                         <th>Role</th>
-                        <th>Action</th>
+                        {JSON.parse(localStorage.getItem('session_user')).role === 'Super Admin' && (<th>Action</th>)}
                       </tr>
                     </thead>
                     <tbody>
@@ -123,7 +123,7 @@ class User extends React.Component {
                   </table>
                   <div className="d-flex flex-row align-items-center justify-content-between w-100 px-4">
                     <div className="btn-wrapper">
-                    <button className="d-inline-flex btn btn-outline-secondary" disabled={this.state.pageInfo.page === 1 ? true : false} onClick={()=>{this.props.history.push(`/dashboard/users?${qs.stringify({...params, ...{page: params.page + 1}})}`);this.fetchUser(qs.stringify({...params, page: parseInt(params.page) - 1}))}}>Prev</button>
+                    <button className="d-inline-flex btn btn-outline-secondary" disabled={this.state.pageInfo.page === 1 ? true : false} onClick={()=>{this.props.history.push(`/dashboard/users?${qs.stringify({...params, ...{page: this.state.pageInfo.page + 1}})}`);this.fetchUser(qs.stringify({...params, page: parseInt(this.state.pageInfo.page) - 1}))}}>Prev</button>
                     </div>                
                     <div className="wrapper">
                       {[...Array(this.state.pageInfo.totalPage)].map((o, i) => (
@@ -131,7 +131,7 @@ class User extends React.Component {
                       ))}
                     </div>
                     <div className="btn-wrapper">
-                      <button className="d-inline-flex btn btn-outline-secondary" disabled={this.state.pageInfo.page >= this.state.pageInfo.totalPage ? true : false} onClick={()=>{this.props.history.push(`/dashboard/users?${qs.stringify({...params, ...{page: params.page + 1}})}`);this.fetchUser(qs.stringify({...params, page: parseInt(params.page) + 1}))}}>Next</button>
+                      <button className="d-inline-flex btn btn-outline-secondary" disabled={this.state.pageInfo.page >= this.state.pageInfo.totalPage ? true : false} onClick={()=>{this.props.history.push(`/dashboard/users?${qs.stringify({...params, ...{page: this.state.pageInfo.page + 1}})}`);this.fetchUser(qs.stringify({...params, page: parseInt(this.state.pageInfo.page) + 1}))}}>Next</button>
                     </div> 
                   </div>
                 </div>

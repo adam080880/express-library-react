@@ -109,7 +109,7 @@ class Config extends React.Component {
     const {genreName: name} = this.state
 
     GenreModel.post({ name }).then((res) => {
-      Swal.fire('Success', 'Success create author', 'success')
+      Swal.fire('Success', 'Success create genre', 'success')
     })
     .catch((rej) => {
       Swal.fire('Error', rej.response.data.msg, 'error')
@@ -142,7 +142,7 @@ class Config extends React.Component {
     const {genreName: name, genreId: id} = this.state
 
     GenreModel.patch({ name, id }).then((res) => {
-      Swal.fire('Success', 'Success update author', 'success')
+      Swal.fire('Success', 'Success update genre', 'success')
     })
     .catch((rej) => {
       Swal.fire('Error', rej.response.data.msg, 'error')
@@ -203,7 +203,6 @@ class Config extends React.Component {
   renderAuthor = (val, index) => (
     <tr key={index}>
       <td>{val.name}</td>
-      <td>{val.description}</td>
       <td>
         <button className="btn btn-danger btn-sm" onClick={e => this.deleteAuthor(val.id)}>
           <span className="fas fa-trash"></span>
@@ -250,6 +249,7 @@ class Config extends React.Component {
                 <input type="text" onChange={e => this.setState({authorDesc: e.target.value})} placeholder="Author description" value={this.state.authorDesc} className="form-control"/>
               </div>
               <button className="cta px-3 py-2 rounded-pill text-white border-0 mt-3" type="submit">Submit</button>
+              <button className="cta cta-secondary px-3 py-2 rounded-pill text-white border-0 ml-2 mt-3" type="button" onClick={this.toggleModal}>Close</button>
             </form>
           </ModalBody>)}
           {(this.state.form === 'addGenre' || this.state.form === 'editGenre') && (<ModalBody>
@@ -260,6 +260,7 @@ class Config extends React.Component {
                 <input type="text" value={this.state.genreName} onChange={e => this.setState({genreName: e.target.value})} placeholder="Genre name" className="form-control"/>
               </div>
               <button className="cta px-3 py-2 rounded-pill text-white border-0 mt-3" type="submit">Submit</button>
+              <button className="cta cta-secondary px-3 py-2 rounded-pill text-white border-0 ml-2 mt-3" type="button" onClick={this.toggleModal}>Close</button>
             </form>
           </ModalBody>)}
         </Modal>
@@ -297,7 +298,6 @@ class Config extends React.Component {
                     <thead>
                       <tr>
                         <th>Name</th>
-                        <th>Description</th>
                         <th>Action</th>
                       </tr>
                     </thead>

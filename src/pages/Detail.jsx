@@ -185,6 +185,7 @@ class Detail extends React.Component {
                   <input className="form-control" type="date" name="promised_returned_at" id="promised_returned_at" onChange={(e) => this.setState({ promise_returned_at: e.target.value })} />
                 </div>
                 <button className="cta rounded-pill mt-3 mb-2 px-3 py-2 border-0 text-white" type="submit">Book</button>
+                <button className="cta cta-secondary px-3 py-2 rounded-pill text-white border-0 ml-2 mt-3" type="button" onClick={this.toggleModal}>Close</button>
               </form>
             </ModalBody>)}
             {this.state.form === 2 && (<ModalBody>
@@ -213,6 +214,7 @@ class Detail extends React.Component {
                   <input type="file" accept="image/*" name="file" id="file" onChange={this.handleImage}/>
                 </div>
                 <button type="submit" className="mt-4 cta rounded-pill px-3 text-white border-0 py-2">Submit</button>
+                <button className="cta cta-secondary px-3 py-2 rounded-pill text-white border-0 ml-2 mt-3" type="button" onClick={this.toggleModal}>Close</button>
               </form>
             </ModalBody>)}
           </Modal>
@@ -275,29 +277,31 @@ class Detail extends React.Component {
                     </li>
                   </ul>
                   <span className="font-weight-bold mb-3"> History:</span><br/>
-                  <table className="table mt-3">
-                    <thead className="thead">
-                      <tr>
-                        <th>Member</th>
-                        <th>Last Updated</th>
-                      </tr>
-                    </thead>
-                    <tbody className="tbody">
-                      {this.state.histories.length > 0 && this.state.histories.map((val, index) => (
-                        <tr key={index}>
-                          <td>{val.member}</td>
-                          <td>{val.last_updated}</td>
+                  <div className="table-responsive">
+                    <table className="table mt-3">
+                      <thead className="thead">
+                        <tr>
+                          <th>Member</th>
+                          <th>Last Updated</th>
                         </tr>
-                      ))}
-                      {
-                        this.state.histories.length === 0 && (
-                          <tr>
-                            <td colSpan={2} className="text-center">Histories is not found</td>
+                      </thead>
+                      <tbody className="tbody">
+                        {this.state.histories.length > 0 && this.state.histories.map((val, index) => (
+                          <tr key={index}>
+                            <td>{val.member}</td>
+                            <td>{val.last_updated}</td>
                           </tr>
-                        )
-                      }
-                    </tbody>
-                  </table>
+                        ))}
+                        {
+                          this.state.histories.length === 0 && (
+                            <tr>
+                              <td colSpan={2} className="text-center">Histories is not found</td>
+                            </tr>
+                          )
+                        }
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
