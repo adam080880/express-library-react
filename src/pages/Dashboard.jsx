@@ -19,6 +19,7 @@ import Catalog from './Catalog'
 import Detail from './Detail'
 import Transaction from './Transaction'
 import Config from './Config'
+import User from './User'
 
 import Swal from 'sweetalert2'
 import Select from 'react-select'
@@ -234,6 +235,9 @@ class Dashboard extends React.Component {
                           <Link to="#" onClick={() => this.toggle(2)} className="nav-link ml-0 pl-0">Add Book</Link>
                         </div>)}
                         {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="nav-item">
+                          <Link to="/dashboard/users" className="nav-link ml-0 pl-0">Users</Link>
+                        </div>)}
+                        {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="nav-item">
                           <Link to="/dashboard/configs" className="nav-link ml-0 pl-0">Configs</Link>
                         </div>)}
                       </div>
@@ -266,6 +270,7 @@ class Dashboard extends React.Component {
                   <Route exact path="/dashboard/history" component={Transaction} />
                   <Route exact path="/dashboard/catalog" component={Catalog} />
                   <Route exact path="/dashboard/configs" component={Config} />
+                  <Route exact path="/dashboard/users" component={User} />
                   <Route exact path="/dashboard/catalog/detail/:id" component={Detail} />
               </Col>
             </Row>

@@ -287,7 +287,7 @@ class Config extends React.Component {
                       <input type="text" onChange={e => this.setState({searchAuthor: e.target.value})} className="form-control" placeholder="Search authors" />
                     </form>
                     <button className="btn btn-primary btn-sm d-flex align-self-stretch align-items-center justify-content-center ml-2" onClick={e => this.trigger('addAuthor')}>
-                      <span className="fas fa-plus mr-1"></span> Author
+                      <span className="fas fa-plus mr-2"></span> Author
                     </button>
                   </div>
                 </div>
@@ -321,7 +321,7 @@ class Config extends React.Component {
                       <input type="text" onChange={e => this.setState({searchGenre: e.target.value})} className="form-control" placeholder="Search authors" />
                     </form>
                     <button className="btn btn-primary btn-sm d-flex align-self-stretch align-items-center justify-content-center ml-2" onClick={e => this.trigger('addGenre')}>
-                      <span className="fas fa-plus mr-1"></span> Genre
+                      <span className="fas fa-plus mr-2"></span> Genre
                     </button>
                   </div>
                 </div>
