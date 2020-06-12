@@ -51,6 +51,17 @@ class Catalog extends React.Component {
     await this.fetchData(param)
   }
 
+  componentDidUpdate() {
+    const params = qs.parse(this.props.location.search.slice(1))
+    params.page = params.page || 1
+
+    if (this.props.location.state) {
+      if (this.props.location.state.isFetching === true) {
+        this.fetchData({...params, ...{page: params.page}})
+      }
+    }
+  }
+
   search = (e) => {
     e.preventDefault()
     const query = this.props.location.search.slice(1)
@@ -83,11 +94,11 @@ class Catalog extends React.Component {
           <h5 className="card-title font-weight-bold">
             {book.title}
           </h5>
-          <div className="d-flex mt-0 mb-2 flex-row align-items-center justify-content-between">
+          <div className="d-flex mt-0 mb-2 flex-lg-row align-items-start flex-column justify-content-between">
             <h6 className="card-subtitle mb-0 text-muted">
               {book.genre}
             </h6>                      
-            <div className={`badge badge-${ book.status === 'available' ? 'success' : 'danger' }`}>
+            <div className={`mt-2 mt-lg-0 badge badge-${ book.status === 'available' ? 'success' : 'danger' }`}>
               {book.status}
             </div>
           </div>

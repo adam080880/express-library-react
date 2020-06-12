@@ -24,6 +24,8 @@ import User from './User'
 import Swal from 'sweetalert2'
 import Select from 'react-select'
 
+import qs from 'querystring'
+
 class Dashboard extends React.Component {
   constructor(props) {
     super(props)
@@ -45,7 +47,7 @@ class Dashboard extends React.Component {
       author_id: '',
       genre_id: '',
       file: [],
-      file_: [],
+      file_: {},
     }
   }
 
@@ -100,8 +102,13 @@ class Dashboard extends React.Component {
   submitForm = (e) => {
     e.preventDefault()
 
-    if(this.state.file_.size >= 1240000 || this.state.file_.type.split('/')[0] !== 'image') {
-      Swal.fire('Failed', 'Max file size is 1240KB and file type just image', 'error')
+    if (this.state.file_.size) {
+      if(this.state.file_.size >= 1240000 || this.state.file_.type.split('/')[0] !== 'image') {
+        Swal.fire('Failed', 'Max file size is 1240KB and file type just image', 'error')
+        return ;
+      }
+    } else {
+      Swal.fire('Failed', 'Image is required', 'error')
       return ;
     }
 
@@ -118,8 +125,11 @@ class Dashboard extends React.Component {
         this.setState({
           isOpen: false,
         })
-        this.props.history.push('/dashboard/catalog?page=1')
-        window.location.reload(false)
+        if (this.props.location.pathname === '/dashboard/catalog') {
+          this.props.history.push(`/dashboard/catalog?${qs.stringify({...qs.parse(this.props.location.search.slice(1))})}`, {isFetching: true})
+        } else {
+          this.props.history.push('/dashboard/catalog?page=1', {isFetching: true})
+        }
       })
     })
     .catch((rej) => {
@@ -232,14 +242,14 @@ class Dashboard extends React.Component {
               {this.state.session_user && 
                 !this.state.session_user.name && (<div className="d-flex align-items-center flex-column justify-content-center">
                 <div className="d-flex align-items-center flex-column justify-content-center">
-                  <Link to="#" onClick={() => this.toggle(1)} style={{fontSize: "13px"}} className="ml-0 pl-0">
+                  <Link to="#" onClick={e => {e.preventDefault(); this.toggle(1)}} style={{fontSize: "13px"}} className="ml-0 pl-0">
                     <span style={{fontSize: "18px", textAlign: "center"}} className="fas fa-scroll mb-1 text-dark"></span>
                     <span style={{fontSize: '13px', color: 'black'}}>Biodata</span>
                   </Link>
                 </div>
               </div>)}
               {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="d-flex align-items-center flex-column justify-content-center">
-                <Link to="#" onClick={e => this.toggle(2)} style={{fontSize: "13px"}} className="ml-0 pl-0">
+                <Link to="#" onClick={e => {e.preventDefault(); this.toggle(2)}} style={{fontSize: "13px"}} className="ml-0 pl-0">
                     <span style={{fontSize: "18px", textAlign: "center"}} className="fas fa-plus mb-1 text-dark d-block"></span>
                     <span style={{fontSize: '13px', color: 'black'}}>Add Book</span>
                   </Link>
@@ -274,10 +284,10 @@ class Dashboard extends React.Component {
                         </div>)}
                         {this.state.session_user && 
                           !this.state.session_user.name && (<div className="nav-item">
-                            <Link to="#" onClick={() => this.toggle(1)} className="nav-link ml-0 pl-0">Complete Biodata</Link>
+                            <Link to="#" onClick={e => {e.preventDefault(); this.toggle(1)}} className="nav-link ml-0 pl-0">Complete Biodata</Link>
                           </div>)}
                         {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="nav-item">
-                          <Link to="#" onClick={() => this.toggle(2)} className="nav-link ml-0 pl-0">Add Book</Link>
+                          <Link to="#" onClick={e => {e.preventDefault(); this.toggle(2)}} className="nav-link ml-0 pl-0">Add Book</Link>
                         </div>)}
                         {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="nav-item">
                           <Link to="/dashboard/users" className="nav-link ml-0 pl-0">Users</Link>
@@ -301,7 +311,7 @@ class Dashboard extends React.Component {
                   <ul className="navbar-nav">
                     {localStorage.getItem('token') && (
                       <li className="nav-item">
-                        <Link to="#" className="px-3 nav-link btn btn-danger text-white font-weight-bold ml-3" onClick={this.logout}>Logout</Link>
+                        <Link to="#" className="px-3 nav-link btn btn-danger text-white font-weight-bold  btn-sm ml-3" onClick={this.logout}>Logout</Link>
                       </li>
                     )}
                     {!localStorage.getItem('token') && (
