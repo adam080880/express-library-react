@@ -11,6 +11,17 @@ import {
 } from 'react-router-dom'
 
 class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      seconds: 3
+    }
+  }
+
+  componentDidMount() {
+    setInterval(() => this.setState({seconds: this.state.seconds - 1}), 1000)
+  }
+
   PrivateRoute = (props) => {
     return !localStorage.getItem('token') ? (
       <Redirect to="/auth/login" />
@@ -26,6 +37,9 @@ class App extends React.Component {
           <Switch>
             <Route path="/auth" component={Auth} />
             <Route path="/dashboard" component={Dashboard} />
+            <Route>
+              <p>404 Page redirect to catalog in { this.state.seconds } seconds { this.state.seconds === 0 && <Redirect to="/dashboard/catalog" /> }</p>
+            </Route>
           </Switch>
         </BrowserRouter>
       </>

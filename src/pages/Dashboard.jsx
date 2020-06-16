@@ -225,13 +225,13 @@ class Dashboard extends React.Component {
         {/* End Modal */}
           <div className="container-fluid px-0">
             <div className="bottom-bar border d-block d-lg-none px-3 py-2 position-fixed flex-row d-flex bg-white shadow-sm align-items-center justify-content-between" style={{width: "100%", bottom: 0, zIndex: 100, overflowX: 'auto'}}>
-              <div className="d-flex align-items-center flex-column justify-content-center">
+              <div className="d-flex align-items-center flex-column flex-grow-1 text-center justify-content-center">
                   <Link to="/dashboard/catalog" style={{fontSize: "13px"}} className="ml-0 pl-0 text-dark">
                   <span style={{fontSize: "18px", textAlign: "center"}} className="fas fa-book mb-1 d-block text-dark"></span>
                     <span style={{fontSize: '13px', color: 'black'}}>Catalog</span>
                   </Link>
               </div>
-              {this.state.session_user && (<div className="d-flex align-items-center flex-column justify-content-center">
+              {this.state.session_user && this.state.session_user.name && (<div className="d-flex align-items-center flex-column flex-grow-1 text-center justify-content-center">
                 <div className="d-flex align-items-center flex-column justify-content-center">
                   <Link to="/dashboard/history" style={{fontSize: "13px"}} className="ml-0 pl-0">
                     <span style={{fontSize: "18px", textAlign: "center"}} className="fas fa-history mb-1 text-dark d-block"></span>
@@ -240,27 +240,27 @@ class Dashboard extends React.Component {
                 </div>
               </div>)}
               {this.state.session_user && 
-                !this.state.session_user.name && (<div className="d-flex align-items-center flex-column justify-content-center">
+                !this.state.session_user.name && (<div className="d-flex align-items-center flex-column justify-content-center flex-grow-1 text-center">
                 <div className="d-flex align-items-center flex-column justify-content-center">
                   <Link to="#" onClick={e => {e.preventDefault(); this.toggle(1)}} style={{fontSize: "13px"}} className="ml-0 pl-0">
-                    <span style={{fontSize: "18px", textAlign: "center"}} className="fas fa-scroll mb-1 text-dark"></span>
+                    <span style={{fontSize: "18px", textAlign: "center"}} className="fas fa-scroll mb-1 text-dark d-block"></span>
                     <span style={{fontSize: '13px', color: 'black'}}>Biodata</span>
                   </Link>
                 </div>
               </div>)}
-              {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="d-flex align-items-center flex-column justify-content-center">
-                <Link to="#" onClick={e => {e.preventDefault(); this.toggle(2)}} style={{fontSize: "13px"}} className="ml-0 pl-0">
+              {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="d-flex align-items-center flex-column justify-content-center flex-grow-1 text-center">
+                <Link to="#" onClick={e => {e.preventDefault(); this.toggle(2); this.fetchAuthors(); this.fetchGenres()}} style={{fontSize: "13px"}} className="ml-0 pl-0">
                     <span style={{fontSize: "18px", textAlign: "center"}} className="fas fa-plus mb-1 text-dark d-block"></span>
                     <span style={{fontSize: '13px', color: 'black'}}>Add Book</span>
                   </Link>
               </div>)}
-              {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="d-flex align-items-center flex-column justify-content-center">
+              {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="d-flex align-items-center flex-column justify-content-center flex-grow-1 text-center">
                   <Link to="/dashboard/users" style={{fontSize: "13px"}} className="ml-0 pl-0">
                     <span style={{fontSize: "18px", textAlign: "center"}} className="fas fa-users mb-1 text-dark d-block"></span>
                     <span style={{fontSize: '13px', color: 'black'}}>Users</span>
                   </Link>
               </div>)}
-              {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="d-flex align-items-center flex-column justify-content-center">
+              {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="d-flex align-items-center flex-column justify-content-center flex-grow-1 text-center">
               <Link to="/dashboard/configs" style={{fontSize: "13px"}} className="ml-0 pl-0">
                     <span style={{fontSize: "18px", textAlign: "center"}} className="fas fa-cog mb-1 text-dark d-block"></span>
                     <span style={{fontSize: '13px', color: 'black'}}>Configs</span>
@@ -279,7 +279,7 @@ class Dashboard extends React.Component {
                         <div className="nav-item">
                           <Link to="/dashboard/catalog" className="nav-link ml-0 pl-0">Catalog</Link>
                         </div>
-                        {this.state.session_user && (<div className="nav-item">
+                        {this.state.session_user && this.state.session_user.name && (<div className="nav-item">
                           <Link to="/dashboard/history" className="nav-link ml-0 pl-0">History Transaction</Link>
                         </div>)}
                         {this.state.session_user && 
@@ -287,7 +287,7 @@ class Dashboard extends React.Component {
                             <Link to="#" onClick={e => {e.preventDefault(); this.toggle(1)}} className="nav-link ml-0 pl-0">Complete Biodata</Link>
                           </div>)}
                         {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="nav-item">
-                          <Link to="#" onClick={e => {e.preventDefault(); this.toggle(2)}} className="nav-link ml-0 pl-0">Add Book</Link>
+                          <Link to="#" onClick={e => {e.preventDefault(); this.toggle(2); this.fetchAuthors(); this.fetchGenres()}} className="nav-link ml-0 pl-0">Add Book</Link>
                         </div>)}
                         {this.state.session_user && (this.state.session_user.role.toLowerCase() === 'super admin' || this.state.session_user.role.toLowerCase() === 'admin') && (<div className="nav-item">
                           <Link to="/dashboard/users" className="nav-link ml-0 pl-0">Users</Link>

@@ -42,6 +42,7 @@ class Detail extends React.Component {
   }
 
   toggleModal = (param) => {
+    this.getAuthorAndGenres()
     this.setState({
       isOpen: !this.state.isOpen,
       form: param
@@ -156,9 +157,7 @@ class Detail extends React.Component {
     })
   }
 
-  componentDidMount() {
-    this.findBook()
-
+  getAuthorAndGenres = () => {
     AuthorModel.get().then((res) => {
       this.setState({
         authors: res.data.data
@@ -170,6 +169,12 @@ class Detail extends React.Component {
         genres: res.data.data
       })
     })
+  }
+
+  componentDidMount() {
+    this.findBook()
+
+    this.getAuthorAndGenres()
   }
   
   render() {
