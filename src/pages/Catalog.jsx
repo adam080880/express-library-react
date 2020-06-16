@@ -12,6 +12,9 @@ import {
 
 import qs from 'querystring'
 
+import {connect} from 'react-redux'
+import {setBooks} from '../redux/actions/books'
+
 class Catalog extends React.Component {
   constructor(props) {
     super(props)
@@ -24,7 +27,7 @@ class Catalog extends React.Component {
     }
   }
 
-  fetchData = async (params) => {
+  fetchData = (params) => {
     this.setState({isLoading: true})
 
     const param = qs.stringify(params)
@@ -32,10 +35,10 @@ class Catalog extends React.Component {
 
     const results = Axios.get(url)
     results.then((res) => {
-      this.setState({ data: res.data.data, pageInfo: res.data.pageInfo })
+      this.props.setBooks({ books: res.data.data, pageInfo: res.data.pageInfo })
     })
     .catch((rej) => {
-      this.setState({ data: [] })
+      this.props.setBooks({ books: [], pageInfo: {} })
     })
     .finally(() => {
       this.setState({isLoading: false})
@@ -52,14 +55,14 @@ class Catalog extends React.Component {
   }
 
   componentDidUpdate() {
-    const params = qs.parse(this.props.location.search.slice(1))
-    params.page = params.page || 1
+    // const params = qs.parse(this.props.location.search.slice(1))
+    // params.page = params.page || 1
 
-    if (this.props.location.state) {
-      if (this.props.location.state.isFetching === true) {
-        this.fetchData({...params, ...{page: params.page}})
-      }
-    }
+    // if (this.props.location.state) {
+    //   if (this.props.location.state.isFetching === true) {
+    //     this.fetchData({...params, ...{page: params.page}})
+    //   }
+    // }
   }
 
   search = (e) => {
@@ -72,8 +75,8 @@ class Catalog extends React.Component {
   }
 
   condition = (props) => {
-    if (this.state.isLoading || props.state.data.length > 0) return props.dataRender
-    else if (props.state.data.length === 0 && !props.state.isLoading) return <h1>Data is not available</h1>
+    if (this.props.books.isLoading || this.props.books.books.length > 0) return props.dataRender
+    else if (this.props.books.books.length === 0 && !this.props.books.isLoading) return <h1>Data is not available</h1>
   }
   
   sortBy = (param) => {
@@ -114,62 +117,68 @@ class Catalog extends React.Component {
     const params = qs.parse(this.props.location.search.slice(1))
     params.page = params.page || 1
     return (
-      <>
-        <div className="container-fluid p-0 mb-5" style={{overflowX: 'hidden'}}>
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <span>Dashboard</span>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <Link to="/dashboard/catalog">Catalog</Link>
-            </BreadcrumbItem>
-          </Breadcrumb>
-          <div className="d-flex flex-column flex-lg-row align-items-center justify-content-between px-4 pb-0 mt-3">
-            <h3>List Book</h3>
-            <div className="filter d-flex align-items-center">
-              <form onSubmit={this.search}>
-                <input type="text" className="form-control" onChange={e => this.setState({search: e.target.value})} placeholder="Search book" />
-              </form>
-              <div className="dropdown ml-2">
-                  <button className="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Sort By
-                  </button>
-                  <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <Link className="dropdown-item" to="#" onClick={e => {e.preventDefault(); this.sortBy('desc')}}>Desc</Link>
-                    <Link className="dropdown-item" to="#" onClick={e => {e.preventDefault(); this.sortBy('asc')}}>Asc</Link>
-                  </div>
+      <div className="container-fluid p-0 mb-5" style={{overflowX: 'hidden'}}>
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <span>Dashboard</span>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <Link to="/dashboard/catalog">Catalog</Link>
+          </BreadcrumbItem>
+        </Breadcrumb>
+        <div className="d-flex flex-column flex-lg-row align-items-center justify-content-between px-4 pb-0 mt-3">
+          <h3>List Book</h3>
+          <div className="filter d-flex align-items-center">
+            <form onSubmit={this.search}>
+              <input type="text" className="form-control" onChange={e => this.setState({search: e.target.value})} placeholder="Search book" />
+            </form>
+            <div className="dropdown ml-2">
+                <button className="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Sort By
+                </button>
+                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <Link className="dropdown-item" to="#" onClick={e => {e.preventDefault(); this.sortBy('desc')}}>Desc</Link>
+                  <Link className="dropdown-item" to="#" onClick={e => {e.preventDefault(); this.sortBy('asc')}}>Asc</Link>
                 </div>
               </div>
             </div>
-            <div className="w-100 text-center">
-              {this.state.isLoading && (
-                <div className="spinner-border text-primary mx-auto my-5">
-                  <div className="sr-only">Loading...</div>
-                </div>
-              )}
-            </div>
-            {!this.state.isLoading && (<div id="listBookWrapper" className="px-lg-3 px-1 mt-2">
-              <div className="row no-gutters">
-                <this.condition state={this.state} dataRender={this.state.data.map(this.bookRender)}></this.condition>
+          </div>
+          <div className="w-100 text-center">
+            {this.props.books.isLoading && (
+              <div className="spinner-border text-primary mx-auto my-5">
+                <div className="sr-only">Loading...</div>
               </div>
-            </div>)}
-            <div className="d-flex flex-row align-items-center justify-content-between w-100 px-4">
-              <div className="btn-wrapper">
-              <button className="d-inline-flex btn btn-outline-secondary" disabled={params.page > 1 ? false : true} onClick={()=>this.fetchData({...params, page: parseInt(params.page) - 1})}>Prev</button>
-              </div>                
-              <div className="wrapper">
-                {!this.state.isLoading && [...Array(this.state.pageInfo.totalPage)].map((o, i) => (
-                  <button onClick={()=>this.fetchData({...params, page: params.page? i+1 : i+1})} className='mx-1 btn btn-outline-secondary' key={i.toString()}>{i+1}</button>
-                ))}
-              </div>
-              <div className="btn-wrapper">
-                <button className="d-inline-flex btn btn-outline-secondary" disabled={params.page >= this.state.pageInfo.totalPage ? true : false} onClick={()=>this.fetchData({...params, page: parseInt(params.page) + 1})}>Next</button>
-              </div> 
+            )}
+          </div>
+          {!this.props.books.isLoading && (<div id="listBookWrapper" className="px-lg-3 px-1 mt-2">
+            <div className="row no-gutters">
+              <this.condition state={this.state} dataRender={this.props.books.books.map(this.bookRender)}></this.condition>
             </div>
+          </div>)}
+          <div className="w-100 text-center px-lg-3 px-1">
+            <button className="btn btn-secondary">Prev</button>
+            <span className="btn- mx-2">
+              {[...Array(this.props.books.pageInfo.totalPage)].map((val, index) => (
+                <Link key={index} to={`/dashboard/catalog?${qs.stringify({...params, ...{page: index+1}})}`} className="btn btn-secondary mx-1" onClick={e => {
+                  e.preventDefault()
+                  this.props.history.push("/dashboard/catalog?"+qs.stringify({...params, ...{page: index+1}}))
+                  this.fetchData(this.props.location.search.slice(1))
+                }}>{(index+1)}</Link>
+              ))}
+            </span>
+            <button className="btn btn-secondary">Next</button>
+          </div>
         </div>
-      </>
     )
   }
 }
 
-export default Catalog
+const mapStateToProps = state => ({
+  books: state.books
+})
+
+const mapDispatchToProps = {
+  setBooks
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Catalog)
