@@ -1,7 +1,5 @@
 import React from 'react'
 
-import Axios from 'axios'
-import { appUrl } from '../configs/app'
 import {
   Link,
 } from 'react-router-dom'
@@ -13,7 +11,7 @@ import {
 import qs from 'querystring'
 
 import {connect} from 'react-redux'
-import {setBooks} from '../redux/actions/books'
+import {setBooks, setLoading} from '../redux/actions/books'
 
 class Catalog extends React.Component {
   constructor(props) {
@@ -30,22 +28,10 @@ class Catalog extends React.Component {
   fetchData = (params) => {
     this.setState({isLoading: true})
 
-    const param = qs.stringify(params)
-    const url = appUrl(`books?${param}&limit=4`)
-
-    const results = Axios.get(url)
-    results.then((res) => {
-      this.props.setBooks({ books: res.data.data, pageInfo: res.data.pageInfo })
-    })
-    .catch((rej) => {
-      this.props.setBooks({ books: [], pageInfo: {} })
-    })
-    .finally(() => {
-      this.setState({isLoading: false})
-    })
+    this.props.setBooks(params)
     
     if (params) {
-      this.props.history.push(`/dashboard/catalog?${param}`)
+      this.props.history.push(`/dashboard/catalog?${qs.stringify(params)}`)
     }
   }
 
@@ -68,7 +54,7 @@ class Catalog extends React.Component {
   search = (e) => {
     e.preventDefault()
     const query = this.props.location.search.slice(1)
-    const param = qs.stringify({...qs.parse(query), ...{search: this.state.search}})
+    const param = qs.stringify({...qs.parse(query), ...{search: this.state.search, page: 1}})
     this.props.history.push(`/dashboard/catalog?${param}`)
 
     this.fetchData(qs.parse(param))
@@ -152,21 +138,21 @@ class Catalog extends React.Component {
           </div>
           {!this.props.books.isLoading && (<div id="listBookWrapper" className="px-lg-3 px-1 mt-2">
             <div className="row no-gutters">
-              <this.condition state={this.state} dataRender={this.props.books.books.map(this.bookRender)}></this.condition>
+              <this.condition dataRender={this.props.books.books.map(this.bookRender)}></this.condition>
             </div>
           </div>)}
-          <div className="w-100 text-center px-lg-3 px-1">
-            <button className="btn btn-secondary">Prev</button>
-            <span className="btn- mx-2">
-              {[...Array(this.props.books.pageInfo.totalPage)].map((val, index) => (
-                <Link key={index} to={`/dashboard/catalog?${qs.stringify({...params, ...{page: index+1}})}`} className="btn btn-secondary mx-1" onClick={e => {
-                  e.preventDefault()
-                  this.props.history.push("/dashboard/catalog?"+qs.stringify({...params, ...{page: index+1}}))
-                  this.fetchData(this.props.location.search.slice(1))
-                }}>{(index+1)}</Link>
+          <div className="d-flex flex-row align-items-center justify-content-between w-100 px-4">
+            <div className="btn-wrapper">
+            <button className="d-inline-flex btn btn-outline-secondary" disabled={params.page > 1 ? false : true} onClick={()=>this.fetchData({...params, page: parseInt(params.page) - 1})}>Prev</button>
+            </div>                
+            <div className="wrapper">
+              {!this.props.books.isLoading && [...Array(this.props.books.pageInfo.totalPage)].map((o, i) => (
+                <button onClick={()=>this.fetchData({...params, page: params.page? i+1 : i+1})} className='mx-1 btn btn-outline-secondary' key={i.toString()}>{i+1}</button>
               ))}
-            </span>
-            <button className="btn btn-secondary">Next</button>
+            </div>
+            <div className="btn-wrapper">
+              <button className="d-inline-flex btn btn-outline-secondary" disabled={params.page >= this.props.books.pageInfo.totalPage ? true : false} onClick={()=>this.fetchData({...params, page: parseInt(params.page) + 1})}>Next</button>
+            </div> 
           </div>
         </div>
     )
@@ -178,7 +164,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-  setBooks
+  setBooks, setLoading
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Catalog)

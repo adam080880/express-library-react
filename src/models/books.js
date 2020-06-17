@@ -7,6 +7,9 @@ import {
 // import qs from 'querystring'
 
 const books = {
+  get: (param) => {
+    return Axios.get(appUrl(`books?${param}&limit=4`))
+  },
   find: (id) => {
     return Axios.get(appUrl(`books/${id}`))
   },

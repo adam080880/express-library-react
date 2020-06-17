@@ -25,6 +25,9 @@ import Swal from 'sweetalert2'
 import Select from 'react-select'
 
 import qs from 'querystring'
+import {setBooks} from '../redux/actions/books'
+
+import {connect} from 'react-redux'
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -126,7 +129,8 @@ class Dashboard extends React.Component {
           isOpen: false,
         })
         if (this.props.location.pathname === '/dashboard/catalog') {
-          this.props.history.push(`/dashboard/catalog?${qs.stringify({...qs.parse(this.props.location.search.slice(1))})}`, {isFetching: true})
+          const params = qs.parse(this.props.location.search.slice(1))
+          this.props.setBooks({...params})
         } else {
           this.props.history.push('/dashboard/catalog?page=1', {isFetching: true})
         }
@@ -336,4 +340,9 @@ class Dashboard extends React.Component {
   }
 }
 
-export default Dashboard
+const mapStateToProps = state => ({
+  books: state.books
+})
+const mapDispatchToProps = {setBooks}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
