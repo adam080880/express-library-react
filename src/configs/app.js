@@ -1,21 +1,23 @@
-const name = 'express library'
+const name = "express library";
 
-require('dotenv').config()
+require("dotenv").config();
 
-const {REACT_APP_API_URL} = process.env
+const { REACT_APP_API_URL } = process.env;
 
-const appUrl = (uri) => `${REACT_APP_API_URL}${uri}`
+const appUrl = (uri) => `${REACT_APP_API_URL}${uri}`;
 
 const template = (status, data, o = {}) => {
   return {
     status,
     data,
-    ...o
-  }
-}
+    ...o,
+  };
+};
 
 const app = {
-  name, appUrl, template
-}
+  name,
+  appUrl,
+  template,
+};
 
-module.exports = app
+module.exports = app;

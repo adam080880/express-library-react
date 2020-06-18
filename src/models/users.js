@@ -1,24 +1,26 @@
-import Axios from 'axios'
+import Axios from "axios";
 
-import {
-  appUrl,
-} from '../configs/app'
+import { appUrl } from "../configs/app";
 
 const authors = {
   get: (param) => {
     return Axios.get(appUrl(`user?limit=5&${param}`), {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    })
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
   },
   toggleRole: (id) => {
-    return Axios.patch(appUrl(`user/toggle/role/${id}`), {}, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+    return Axios.patch(
+      appUrl(`user/toggle/role/${id}`),
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       }
-    })
-  }
-}
+    );
+  },
+};
 
-export default authors
+export default authors;
