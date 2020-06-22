@@ -78,7 +78,7 @@ class Catalog extends React.Component {
 
   bookRender = (book, index) => (
     <div
-      className="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3 px-1 p-0 px-lg-2 mb-4"
+      className="col-12 col-xs-12 col-sm-12 col-md-3 col-lg-3 px-1 p-0 px-lg-2 mb-4"
       key={index}
     >
       <div className="card h-100 card-hoverable border-0 shadow-sm">
