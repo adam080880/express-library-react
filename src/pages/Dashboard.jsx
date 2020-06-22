@@ -45,6 +45,7 @@ class Dashboard extends React.Component {
       genre_id: "",
       file: [],
       file_: {},
+      search: "",
     };
   }
 
@@ -605,36 +606,71 @@ class Dashboard extends React.Component {
                 </div>
               </div>
               <Col className="px-0 mb-5 mb-lg-0">
-                <div
-                  className="navbar navbar-expand-lg sticky-top navbar-light bg-white shadow-sm d-flex flex-row justify-content-between align-items-center px-4"
-                  style={{ height: "70px" }}
-                >
-                  <Link className="navbar-brand font-weight-bold" to="/">
-                    EXP.L!bs
-                  </Link>
-                  <ul className="navbar-nav">
-                    {localStorage.getItem("token") && (
-                      <li className="nav-item">
-                        <Link
-                          to="#"
-                          className="px-3 nav-link btn btn-danger text-white font-weight-bold  btn-sm ml-3"
-                          onClick={this.logout}
-                        >
-                          Logout
-                        </Link>
-                      </li>
+                <div className="sticky-top">
+                  <div
+                    className="navbar navbar-expand-lg sticky-top navbar-light bg-white shadow-sm d-flex flex-row justify-content-between align-items-center px-4"
+                    style={{ height: "70px" }}
+                  >
+                    <Link className="navbar-brand font-weight-bold" to="/">
+                      EXP.L!bs
+                    </Link>
+                    <ul className="navbar-nav">
+                      {localStorage.getItem("token") && (
+                        <li className="nav-item">
+                          <Link
+                            to="#"
+                            className="px-3 nav-link btn btn-danger text-white font-weight-bold  btn-sm ml-3"
+                            onClick={this.logout}
+                          >
+                            Logout
+                          </Link>
+                        </li>
+                      )}
+                      {!localStorage.getItem("token") && (
+                        <li className="nav-item">
+                          <Link
+                            to="/auth/login"
+                            className="btn btn-outline-primary font-weight-bold ml-3"
+                          >
+                            Login
+                          </Link>
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                  <div className="bg-white py-2 px-1 d-block d-lg-none">
+                    {this.props.location.pathname === "/dashboard/catalog" && (
+                      <form
+                        action=""
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          this.props.history.push(
+                            `/dashboard/catalog?${qs.stringify({
+                              ...qs.parse(this.props.location.search.slice(1)),
+                              search: this.state.search,
+                            })}`
+                          );
+                          this.props.setBooks({
+                            ...qs.parse(this.props.location.search.slice(1)),
+                            search: this.state.search,
+                          });
+                        }}
+                      >
+                        <div className="form-group mb-0">
+                          <input
+                            type="text"
+                            name=""
+                            id=""
+                            onChange={(e) =>
+                              this.setState({ search: e.target.value })
+                            }
+                            placeholder="Search book"
+                            className="form-control"
+                          />
+                        </div>
+                      </form>
                     )}
-                    {!localStorage.getItem("token") && (
-                      <li className="nav-item">
-                        <Link
-                          to="/auth/login"
-                          className="btn btn-outline-primary font-weight-bold ml-3"
-                        >
-                          Login
-                        </Link>
-                      </li>
-                    )}
-                  </ul>
+                  </div>
                 </div>
 
                 <Route

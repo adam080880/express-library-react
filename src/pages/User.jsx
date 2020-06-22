@@ -122,7 +122,7 @@ class User extends React.Component {
             />
           </form>
         </div>
-        <div className="row px-3">
+        <div className="row px-lg-3 px-1">
           <div className="col mt-2">
             <div className="card border-0 shadow-sm">
               <div className="card-body">
