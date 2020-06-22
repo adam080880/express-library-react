@@ -638,7 +638,7 @@ class Dashboard extends React.Component {
                       )}
                     </ul>
                   </div>
-                  <div className="bg-white py-2 px-1 d-block d-lg-none">
+                  <div className="bg-white p-2 d-block d-lg-none">
                     {this.props.location.pathname === "/dashboard/catalog" && (
                       <form
                         action=""
