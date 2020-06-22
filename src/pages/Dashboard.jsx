@@ -638,8 +638,8 @@ class Dashboard extends React.Component {
                       )}
                     </ul>
                   </div>
-                  <div className="bg-white p-2 d-block d-lg-none">
-                    {this.props.location.pathname === "/dashboard/catalog" && (
+                  {this.props.location.pathname === "/dashboard/catalog" && (
+                    <div className="bg-white p-2 d-block d-lg-none">
                       <form
                         action=""
                         onSubmit={(e) => {
@@ -669,8 +669,8 @@ class Dashboard extends React.Component {
                           />
                         </div>
                       </form>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
 
                 <Route
